@@ -1,0 +1,17 @@
+# VLM QLoRA 학습 설정
+# 베이스 모델: 반드시 2026-06-01 이전 공개 + 라이선스 확인 후 사용.
+model_id: "Qwen/Qwen2.5-VL-7B-Instruct"   # 1순위 후보 (HF 모델카드에서 출시일 최종 확인)
+
+train_jsonl: "data/train_abstention.jsonl"  # data_build로 생성한 학습 데이터
+output_dir: "outputs"
+
+seed: 42
+epochs: 3
+batch_size: 4
+grad_accum: 8
+lr: 0.0001
+
+# LoRA
+lora_r: 256
+lora_alpha: 128
+lora_dropout: 0.05

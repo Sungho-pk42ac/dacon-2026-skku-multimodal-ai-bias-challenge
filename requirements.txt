@@ -1,0 +1,32 @@
+# 대회 기준 환경: Python 3.10 / CUDA 12.4 / PyTorch 2.6.0 / Ubuntu 20.04 / RTX A6000 48GB
+# 아래 버전은 Qwen2.5-VL 학습/추론 기준. 클라우드 인스턴스에서 설치 후 실제 호환 버전 고정(freeze)할 것.
+
+# --- 코어 (학습) ---
+torch==2.6.0
+transformers>=4.49.0          # Qwen2.5-VL 지원 버전
+datasets>=3.0.1
+accelerate>=1.0.0
+peft>=0.13.0
+trl>=0.12.0
+bitsandbytes>=0.44.0          # QLoRA 4bit
+qwen-vl-utils>=0.0.8          # Qwen2.5-VL 비전 입력 처리
+deepspeed>=0.15.0             # (멀티 GPU full/zero3 학습 시)
+
+# --- 추론 (오프라인, vLLM) ---
+vllm>=0.7.0                   # Qwen2.5-VL 멀티모달 + multi-LoRA 서빙
+
+# --- 데이터/평가 ---
+pillow>=10.0.0
+pandas>=2.0.0
+numpy>=1.26.0
+scikit-learn>=1.4.0          # balanced_accuracy_score
+tqdm>=4.66.0
+pyyaml>=6.0
+
+# --- (선택) Tier3 창의적 조합 ---
+# langgraph>=0.2.0            # 기권 의사결정 그래프
+# faiss-cpu>=1.8.0           # 오프라인 RAG 인덱스
+# sentence-transformers      # 로컬 임베딩 (오프라인)
+
+# --- (data_build 단계 전용, 추론과 분리) ---
+# openai>=1.0.0              # 학습 데이터 합성용 — 추론 코드에는 절대 포함하지 말 것
