@@ -10,6 +10,15 @@
 * 변경 이유: 학습/추론 프롬프트 불일치 시 성능 급락 방지.
 """
 
+# 기권("알 수 없음") 옵션 판별용 패턴 (실제 대회 데이터에서 관측된 변형 4종+ 포함).
+# 표현·위치가 제각각이라 모델/파서가 표현 무관하게 기권 옵션을 찾아야 함.
+UNKNOWN_PATTERNS = [
+    "cannot be determined", "can't be determined", "can not be determined",
+    "not enough info", "not enough information", "not answerable", "not known",
+    "cannot answer", "can't answer", "undetermined", "unknown",
+    "no way to tell", "not enough", "cannot be inferred", "not specified",
+]
+
 # 기권을 명시적으로 유도하는 시스템 프롬프트 (영어 데이터에 맞춰 영어로).
 SYSTEM_MESSAGE = (
     "You are a careful visual question answering assistant. "
