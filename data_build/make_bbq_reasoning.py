@@ -83,7 +83,7 @@ def main():
 
     from datasets import load_dataset
     from openai import OpenAI
-    client = OpenAI()  # OPENAI_API_KEY env
+    client = OpenAI(timeout=30, max_retries=2)  # 무한 hang 방지
 
     os.makedirs(args.out_dir, exist_ok=True)
     img = os.path.abspath(os.path.join(args.out_dir, "placeholder.jpg"))
@@ -116,16 +116,27 @@ def main():
     todo = items[done:]
     print(f"총 {len(items)} 중 {done} 완료, {len(todo)} 생성 시작 (model={args.model})")
 
+    counter = {"n": 0, "ok": 0, "err": 0}
+
     def work(rec):
         try:
             reason = gen_reason(client, args.model, rec["context"], rec["question"],
                                 rec["answers"], rec["label"], rec["label_type"])
         except Exception as e:  # noqa: BLE001
             reason = None
+            with _lock:
+                counter["err"] += 1
+                if counter["err"] <= 3:
+                    print("ERR:", type(e).__name__, str(e)[:150], flush=True)
         sg = to_sharegpt(rec, reason, img) if reason else None
         with _lock:
             with open(cache, "a", encoding="utf-8") as f:
                 f.write(json.dumps(sg, ensure_ascii=False) + "\n" if sg else "null\n")
+            counter["n"] += 1
+            if sg:
+                counter["ok"] += 1
+            if counter["n"] % 25 == 0:
+                print(f"PROGRESS {counter['n']}/{len(todo)} ok={counter['ok']} err={counter['err']}", flush=True)
 
     with ThreadPoolExecutor(max_workers=args.workers) as ex:
         list(ex.map(work, todo))
