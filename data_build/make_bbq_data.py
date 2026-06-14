@@ -74,8 +74,17 @@ def main():
 
     from datasets import load_dataset
     os.makedirs(args.out_dir, exist_ok=True)
-    img = os.path.join(args.out_dir, "placeholder.jpg")
+    img = os.path.abspath(os.path.join(args.out_dir, "placeholder.jpg"))  # LLaMA-Factory가 cwd 무관하게 찾도록 절대경로
     make_placeholder(img)
+
+    # LLaMA-Factory 데이터 등록 파일 (dataset_dir=out_dir로 바로 사용)
+    with open(os.path.join(args.out_dir, "dataset_info.json"), "w", encoding="utf-8") as f:
+        json.dump({"bbq_reasoning": {
+            "file_name": "bbq_train.json", "formatting": "sharegpt",
+            "columns": {"messages": "messages", "images": "images"},
+            "tags": {"role_tag": "role", "content_tag": "content",
+                     "user_tag": "user", "assistant_tag": "assistant", "system_tag": "system"},
+        }}, f, ensure_ascii=False, indent=2)
 
     d = load_dataset(args.hf)
     # 카테고리(split)별로 모아서 변환 + ambig/disambig 라벨링

@@ -16,8 +16,9 @@ lora_target: all
 # deepspeed: examples/deepspeed/ds_z2_config.json   # 멀티GPU 시
 
 ### dataset (멀티모달 sharegpt + images)
-dataset: bias_reasoning              # train/llamafactory/dataset_info.json 에 정의
-template: qwen2_vl                   # ⚠️ 설치 버전에 qwen2_5_vl 템플릿 있으면 그걸로 (TEMPLATES 확인)
+dataset: bbq_reasoning              # data/dataset_info.json 에 정의 (make_bbq_data.py 생성)
+dataset_dir: data                   # dataset_info.json + bbq_train.json 위치
+template: qwen2_vl                   # 확인됨: Qwen2.5-VL용 템플릿 = qwen2_vl (별도 qwen2_5_vl 없음)
 cutoff_len: 4096
 max_samples: 100000
 overwrite_cache: true
