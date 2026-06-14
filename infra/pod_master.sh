@@ -2,7 +2,7 @@
 # v2 풀사이클 자율 오케스트레이터 (overnight, pod nohup).
 # 진행: 진짜추론 데이터 대기 → v1 제출 대기 → v2 학습 → 병합 → 자체검증 → submission_v2.csv → HF 배포
 # 인자: $1 = 사이클 태그(v2/v3 등), $2 = dataset 키, $3 = epochs
-set -uo pipefail
+set -o pipefail   # set -u 제거: ~/.bashrc source 시 unbound var로 죽는 문제 방지
 TAG="${1:-v2}"
 DSET="${2:-bbq_reasoning_real}"
 EPOCHS="${3:-3}"
