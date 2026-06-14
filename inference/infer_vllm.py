@@ -42,14 +42,18 @@ def parse_answers(raw):
         return ast.literal_eval(raw)
 
 
-def resolve_image_path(images_dir, image_path):
-    """test.csv의 image_path(예: ./images/xxx.jpg)를 실제 경로로 변환."""
+def resolve_image_path(images_dir, image_path, fallback=None):
+    """test.csv의 image_path(예: ./images/xxx.jpg)를 실제 경로로 변환. 없으면 fallback."""
     base = os.path.basename(str(image_path))
     cand = os.path.join(images_dir, base)
     if os.path.exists(cand):
         return cand
-    # image_path가 데이터 루트 기준 상대경로인 경우
-    return os.path.join(images_dir, "..", str(image_path).lstrip("./"))
+    alt = os.path.join(images_dir, "..", str(image_path).lstrip("./"))
+    if os.path.exists(alt):
+        return alt
+    if fallback and os.path.exists(fallback):
+        return fallback  # 실제 이미지 없을 때(형식 스모크 테스트 등)
+    return cand
 
 
 def build_input(processor, context, question, answers, image):
@@ -75,6 +79,8 @@ def main():
     parser.add_argument("--test", default="data/test.csv")
     parser.add_argument("--images_dir", default="data/test/images")
     parser.add_argument("--out", default="submissions/sub.csv")
+    parser.add_argument("--fallback_image", default="data/placeholder.jpg",
+                        help="실제 이미지 없을 때 대체(형식 스모크 테스트용)")
     args = parser.parse_args()
 
     processor = AutoProcessor.from_pretrained(args.model)
@@ -88,7 +94,8 @@ def main():
     inputs, metas = [], []
     for _, row in df.iterrows():
         answers = parse_answers(row["answers"])
-        img = Image.open(resolve_image_path(args.images_dir, row["image_path"])).convert("RGB")
+        img = Image.open(resolve_image_path(
+            args.images_dir, row["image_path"], args.fallback_image)).convert("RGB")
         inputs.append(build_input(processor, row["context"], row["question"], answers, img))
         metas.append((row["sample_id"], answers))
 
