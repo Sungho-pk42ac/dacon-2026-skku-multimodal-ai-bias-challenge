@@ -53,8 +53,11 @@ def main():
     rows = load_val(args.val, args.limit)
     logger.info("검증 샘플: %d", len(rows))
 
+    from collections import defaultdict
     hit = {"ambiguous": 0, "disambiguated": 0}
     tot = {"ambiguous": 0, "disambiguated": 0}
+    cat_hit = defaultdict(lambda: {"ambiguous": 0, "disambiguated": 0})  # 카테고리별 분해(Hidden 일반화 대리)
+    cat_tot = defaultdict(lambda: {"ambiguous": 0, "disambiguated": 0})
     out_rows = []
     t0 = time.time()
     for i, r in enumerate(rows):
@@ -78,10 +81,13 @@ def main():
             skip_special_tokens=True)[0]
         pred = text_to_label(out, r["answers"])
         lt = r["label_type"]
+        cat = r.get("category", "?")
         tot[lt] += 1
+        cat_tot[cat][lt] += 1
         if pred == int(r["label"]):
             hit[lt] += 1
-        out_rows.append({"pred": pred, "gold": r["label"], "label_type": lt})
+            cat_hit[cat][lt] += 1
+        out_rows.append({"pred": pred, "gold": r["label"], "label_type": lt, "category": cat})
         if (i + 1) % 50 == 0:
             logger.info("%d/%d done", i + 1, len(rows))
 
@@ -91,13 +97,26 @@ def main():
     elapsed = time.time() - t0
     import csv
     with open(args.out, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=["pred", "gold", "label_type"])
+        w = csv.DictWriter(f, fieldnames=["pred", "gold", "label_type", "category"])
         w.writeheader(); w.writerows(out_rows)
     logger.info("=== ambiguous Acc: %.4f (n=%d) ===", acc_a, tot["ambiguous"])
     logger.info("=== disambiguated Acc: %.4f (n=%d) ===", acc_d, tot["disambiguated"])
     logger.info("=== Balanced Accuracy: %.4f ===", ba)
     logger.info("샘플당 %.3fs (A6000 기준 0.5s 목표)", elapsed / max(len(rows), 1))
-    print(f"RESULT BA={ba:.4f} amb={acc_a:.4f} dis={acc_d:.4f} per_sample={elapsed/max(len(rows),1):.3f}s")
+
+    # 카테고리별 분해 BA — Hidden 일반화 약점 진단(가장 낮은 카테고리가 위험)
+    logger.info("--- 카테고리별 Balanced Accuracy (낮은 순) ---")
+    cat_ba = {}
+    for cat in cat_tot:
+        a = cat_hit[cat]["ambiguous"] / max(cat_tot[cat]["ambiguous"], 1)
+        dd = cat_hit[cat]["disambiguated"] / max(cat_tot[cat]["disambiguated"], 1)
+        cat_ba[cat] = (a + dd) / 2
+    for cat, v in sorted(cat_ba.items(), key=lambda x: x[1]):
+        n = cat_tot[cat]["ambiguous"] + cat_tot[cat]["disambiguated"]
+        logger.info("  %-22s BA=%.4f (n=%d)", cat, v, n)
+    worst = min(cat_ba.items(), key=lambda x: x[1]) if cat_ba else ("?", 0)
+    print(f"RESULT BA={ba:.4f} amb={acc_a:.4f} dis={acc_d:.4f} per_sample={elapsed/max(len(rows),1):.3f}s "
+          f"worst_cat={worst[0]}:{worst[1]:.4f}")
 
 
 if __name__ == "__main__":
