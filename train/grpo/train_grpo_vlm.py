@@ -1,84 +1,134 @@
 """
-GRPO (RL) 단계 — SFT 다음 Tier-3 / 2차 Novelty 부스터.
+VLM GRPO (RL) — v2(SFT) 위에 강화학습. TRL 0.19 GRPOTrainer + Qwen2.5-VL.
+보상 = 생성 답이 정답 인덱스와 일치하면 +1 (기권 정답 포함). 별도 grpo_env에서 실행.
 
-받으신 `train_grpo.ipynb`는 Unsloth+TRL GRPOTrainer(텍스트)였다. 우리 대회는 VLM이라
-TRL `GRPOTrainer`의 멀티모달(VLM) 지원을 사용한다 (Qwen2.5-VL + vLLM colocate).
-출처 근거: TRL 공식 문서가 VLM GRPO + vLLM colocate 지원을 명시.
-
-전략: SFT로 학습한 추론형 VLM을 GRPO로 강화.
-  보상(reward) = '정답 인덱스 일치' (정답이 기권 옵션인 ambiguous에서 올바른 기권도 자동 보상).
-  → "정답 + 올바른 기권"을 직접 최적화 → Balanced Accuracy의 두 항을 함께 끌어올림.
-
-⚠️ 비용·복잡도 큼. 1차 SFT로 점수 확보 후 도전. H100 권장.
-⚠️ TRL/모델 버전 호환은 pod에서 확인 후 고정(pip freeze).
+전략: BBQ에서 prompt(이미지+context+질문+선택지) → 모델이 생성 → text_to_label로 인덱스 추출 → gold와 비교.
+※ 별도 venv(/workspace/grpo_env): trl0.19/transformers4.52/torch2.6.
+실행: python train/grpo/train_grpo_vlm.py --base outputs/merged_v2 --n 1200 --steps 300
 """
 
 import argparse
-import logging
-import re
+import os
+import random
+import sys
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger(__name__)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from prompts import SYSTEM_MESSAGE, USER_TEMPLATE, format_options, text_to_label, UNKNOWN_PATTERNS
 
-
-def extract_label(text):
-    """모델 출력에서 최종 선택 인덱스(0/1/2) 추출. <think> 뒤 'N) ...' 우선."""
-    if "</think>" in text:
-        text = text.split("</think>")[-1]
-    m = re.search(r"\b([012])\b", text)
-    return int(m.group(1)) if m else -1
+SEED = 42
+random.seed(SEED)
 
 
-def reward_correct(completions, gold_label, **kwargs):
-    """
-    정답 일치 보상. completions: 생성 텍스트 리스트, gold_label: 정답 인덱스 리스트.
-    정답이 기권 옵션인 ambiguous 문항도 '일치=보상'으로 올바른 기권을 보상.
-    """
-    rewards = []
-    for comp, gold in zip(completions, gold_label):
-        pred = extract_label(comp if isinstance(comp, str) else comp[0]["content"])
-        rewards.append(1.0 if pred == int(gold) else 0.0)
-    return rewards
+def is_unknown(opt):
+    o = str(opt).lower()
+    return any(p in o for p in UNKNOWN_PATTERNS)
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--sft_model", required=True, help="SFT merged 모델 경로(시작점)")
-    parser.add_argument("--dataset", required=True, help="GRPO용 데이터(질문+이미지+gold_label)")
-    parser.add_argument("--out", default="outputs/grpo_qwen25vl")
-    args = parser.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--base", default="outputs/merged_v2", help="GRPO 시작점(SFT merged)")
+    ap.add_argument("--out", default="outputs/grpo_v4")
+    ap.add_argument("--hf", default="walledai/BBQ")
+    ap.add_argument("--n", type=int, default=1200, help="GRPO 프롬프트 수(균형)")
+    ap.add_argument("--steps", type=int, default=300)
+    ap.add_argument("--num_gen", type=int, default=4)
+    args = ap.parse_args()
 
     import torch
-    from datasets import load_dataset
+    from datasets import Dataset, load_dataset
+    from PIL import Image
+    from peft import LoraConfig
     from trl import GRPOConfig, GRPOTrainer
 
-    logger.info("GRPO 시작점(SFT 모델): %s", args.sft_model)
-    dataset = load_dataset("json", data_files=args.dataset, split="train")
+    # placeholder 이미지(SFT와 동일 정책)
+    img_path = os.path.abspath("data/placeholder.jpg")
+    if not os.path.exists(img_path):
+        os.makedirs("data", exist_ok=True)
+        Image.new("RGB", (336, 336), (127, 127, 127)).save(img_path)
+    placeholder = Image.open(img_path).convert("RGB")
+
+    # BBQ → 균형 표본 → GRPO 데이터셋(prompt 대화형 + image + gold_label + answers)
+    d = load_dataset(args.hf)
+    pool = []
+    for split in d.keys():
+        for r in d[split]:
+            ans = list(r["choices"])
+            if len(ans) != 3:
+                continue
+            lab = int(r["answer"])
+            pool.append({"context": r["context"], "question": r["question"], "answers": ans,
+                         "label": lab, "amb": is_unknown(ans[lab])})
+    amb = [x for x in pool if x["amb"]]
+    dis = [x for x in pool if not x["amb"]]
+    random.shuffle(amb); random.shuffle(dis)
+    half = args.n // 2
+    items = amb[:half] + dis[:half]
+    random.shuffle(items)
+
+    def to_row(it):
+        user_text = USER_TEMPLATE.format(context=it["context"], question=it["question"],
+                                         options_block=format_options(it["answers"]))
+        return {
+            "prompt": [
+                {"role": "system", "content": [{"type": "text", "text": SYSTEM_MESSAGE}]},
+                {"role": "user", "content": [{"type": "image"}, {"type": "text", "text": user_text}]},
+            ],
+            "image": placeholder,
+            "gold_label": it["label"],
+            "answers_json": str(it["answers"]),
+        }
+
+    ds = Dataset.from_list([to_row(it) for it in items])
+
+    # 보상: 생성 답 → 인덱스 → gold 일치시 +1
+    def reward_correct(completions, gold_label, answers_json, **kwargs):
+        import ast
+        out = []
+        for comp, gold, aj in zip(completions, gold_label, answers_json):
+            text = comp[-1]["content"] if isinstance(comp, list) else str(comp)
+            try:
+                answers = ast.literal_eval(aj)
+            except Exception:
+                answers = ["", "", ""]
+            pred = text_to_label(text, answers)
+            out.append(1.0 if pred == int(gold) else 0.0)
+        return out
 
     config = GRPOConfig(
         output_dir=args.out,
-        per_device_train_batch_size=2,
-        gradient_accumulation_steps=8,
-        num_generations=8,            # GRPO 그룹 크기
+        per_device_train_batch_size=args.num_gen,   # 한 프롬프트의 그룹을 한 배치에
+        num_generations=args.num_gen,
+        gradient_accumulation_steps=4,
         learning_rate=1e-6,
+        max_prompt_length=1024,
+        max_completion_length=200,
+        max_steps=args.steps,
+        logging_steps=5,
+        save_steps=args.steps,
         bf16=True,
-        max_prompt_length=2048,
-        max_completion_length=256,    # 추론 토큰 — 길면 느려짐
-        use_vllm=True,                # vLLM colocate 가속 (TRL 문서)
-        vllm_mode="colocate",
+        gradient_checkpointing=True,
         report_to="wandb",
-        seed=42,
+        run_name="grpo_v4",
+        temperature=0.9,
+        beta=0.04,
+    )
+
+    # LoRA로 GRPO (풀FT는 48GB OOM). merged_v2 위에 어댑터 학습 → 후처리 merge.
+    peft_config = LoraConfig(
+        r=16, lora_alpha=32, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
     )
 
     trainer = GRPOTrainer(
-        model=args.sft_model,
-        reward_funcs=[reward_correct],
+        model=args.base,
+        reward_funcs=reward_correct,
         args=config,
-        train_dataset=dataset,
+        train_dataset=ds,
+        peft_config=peft_config,
     )
     trainer.train()
-    trainer.save_model(args.out)
-    logger.info("GRPO 완료 → %s", args.out)
+    trainer.save_model(args.out)  # LoRA 어댑터 저장 (base=merged_v2)
+    print("GRPO_DONE", args.out)
 
 
 if __name__ == "__main__":
