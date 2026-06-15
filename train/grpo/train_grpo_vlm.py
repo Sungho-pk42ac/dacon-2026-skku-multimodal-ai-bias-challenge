@@ -116,7 +116,8 @@ def main():
 
     ds = Dataset.from_list([to_row(it) for it in items])
 
-    # 보상: 정답 일치 +1, ambiguous 정답이면 약가중(+0.2) — 채점의 기권 비중 강조(단순 유지)
+    # 보상(Tier1): accuracy + ambiguous(기권) 가중 + format(0/1/2 단일토큰 준수).
+    # 스펙의 10종 reward 중 우리 데이터로 의미있는 것만(나머지=conflict/OCR/cf는 데이터 부재로 제외).
     def reward_correct(completions, gold_label, answers_json, amb, **kwargs):
         import ast
         out = []
@@ -126,11 +127,12 @@ def main():
                 answers = ast.literal_eval(aj)
             except Exception:
                 answers = ["", "", ""]
+            raw = str(text).strip()
+            valid_single = (0 < len(raw) <= 2 and raw[:1] in ("0", "1", "2"))  # 단일토큰 형식
+            fmt = 0.2 if valid_single else -0.3            # format_reward / invalid_token_penalty
             pred = text_to_label(text, answers)
-            if pred == int(gold):
-                out.append(1.2 if is_amb else 1.0)   # ambiguous(기권) 정답에 약가중
-            else:
-                out.append(0.0)
+            acc = (1.2 if is_amb else 1.0) if pred == int(gold) else 0.0  # accuracy + unknown 가중
+            out.append(acc + fmt)
         return out
 
     config = GRPOConfig(
