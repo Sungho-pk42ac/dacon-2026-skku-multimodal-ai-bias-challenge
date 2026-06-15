@@ -33,6 +33,10 @@ echo "[4] 정직한 BA (누출제거 bbq_val_clean.jsonl, 단일토큰이라 max
 python inference/baseline_eval.py --model outputs/merged_v4 --val data/bbq_val_clean.jsonl --limit 0 \
   --max_new_tokens 8 --out data/v4_preds.csv
 
+echo "[4.5] 스트레스 검증 (위치순열 6× 강건성, 300문항) — 운영진 공지 대응(Public 과적합 점검)..."
+python inference/stress_eval.py --model outputs/merged_v4 --val data/bbq_val_clean.jsonl \
+  --limit 300 --max_new_tokens 8 --out data/v4_stress.json 2>&1 | tail -3 || echo "[4.5] stress WARN"
+
 echo "[5] 속도 실측 (200샘플, max_new_tokens=4) — 0.5초 하드게이트 검증..."
 python - <<'PYEOF'
 import time, ast, json, sys, os

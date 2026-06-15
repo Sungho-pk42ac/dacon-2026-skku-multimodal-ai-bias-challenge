@@ -33,6 +33,10 @@ echo "[3] 정직한 BA (bbq_val_clean, max_new_tokens=8) — v4와 동일 검증
 python inference/baseline_eval.py --model outputs/merged_v5 --val data/bbq_val_clean.jsonl --limit 0 \
   --max_new_tokens 8 --out data/v5_preds.csv
 
+echo "[3.5] 스트레스 검증 (위치순열 강건성, v4와 비교용)..."
+python inference/stress_eval.py --model outputs/merged_v5 --val data/bbq_val_clean.jsonl \
+  --limit 300 --max_new_tokens 8 --out data/v5_stress.json 2>&1 | tail -3 || echo "[3.5] stress WARN"
+
 echo "[4] submission_v5.csv (전체 8500, max_new_tokens=4)..."
 python inference/make_submission.py --model outputs/merged_v5 --test data_build/test_full.csv \
   --images_dir /nonexistent --fallback_image data/placeholder.jpg \
