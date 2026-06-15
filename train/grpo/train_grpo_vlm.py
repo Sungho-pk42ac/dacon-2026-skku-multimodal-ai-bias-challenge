@@ -35,6 +35,14 @@ def sample_id(context, question, answers):
     return hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
 
 
+def shuffle_opts(answers, label, seed_str):
+    """make_bbq_clean.py와 동일 — 선택지 셔플+라벨 재매핑(위치편향 제거, v4와 일관)."""
+    rng = random.Random(seed_str)
+    order = [0, 1, 2]
+    rng.shuffle(order)
+    return [answers[i] for i in order], order.index(label)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="outputs/merged_v4", help="GRPO 시작점(v4 SFT merged, Qwen3-VL)")
@@ -81,7 +89,7 @@ def main():
                 continue
             lab = int(r["answer"])
             pool.append({"context": r["context"], "question": r["question"], "answers": ans,
-                         "label": lab, "amb": is_unknown(ans[lab])})
+                         "label": lab, "amb": is_unknown(ans[lab]), "sid": sid})
     print(f"[GRPO] pool {len(pool)} (val 누출 {skipped}건 배제)")
 
     amb = [x for x in pool if x["amb"]]
@@ -92,16 +100,17 @@ def main():
     random.shuffle(items)
 
     def to_row(it):
+        ans, lab = shuffle_opts(it["answers"], it["label"], it["sid"])  # 위치편향 제거(v4와 일관)
         user_text = USER_TEMPLATE.format(context=it["context"], question=it["question"],
-                                         options_block=format_options(it["answers"]))
+                                         options_block=format_options(ans))
         return {
             "prompt": [
                 {"role": "system", "content": [{"type": "text", "text": SYSTEM_MESSAGE}]},
                 {"role": "user", "content": [{"type": "image"}, {"type": "text", "text": user_text}]},
             ],
             "image": placeholder,
-            "gold_label": it["label"],
-            "answers_json": str(it["answers"]),
+            "gold_label": lab,
+            "answers_json": str(ans),
             "amb": it["amb"],
         }
 

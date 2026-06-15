@@ -1,22 +1,20 @@
 """
-v4 클린 데이터 빌더 — 회의 BLOCKER(val 누출) 해결 + 단일토큰 직답 타깃.
+v4 클린 데이터 빌더 (철저화판) — 회의 BLOCKER(val 누출) + 위치편향 + 시나리오누출 해결.
 
-회의(data-risk) 진단: 기존 make_bbq_data.py(카테고리 셔플)와 make_bbq_reasoning.py(글로벌 셔플)는
-분할축·RNG 소비순서가 달라 같은 SEED로도 train/val disjoint 보장이 안 됐고, sample_id가 없어
-중복 검출조차 불가 → 자체검증 BA가 부풀려짐(INFLATED).
+회의 진단(data-risk) + 데이터 철저화(2026-06-15):
+  1) val 누출: split 로직 차이로 train/val disjoint 미보장 → BA 부풀려짐(INFLATED).
+  2) 위치편향: BBQ는 'unknown' 옵션을 항상 마지막(idx 2)에 둠 → 모델이 "애매하면 2번"이라는
+     **위치 규칙**을 외움(의미 아님). Hidden이 위치를 바꾸면 무너짐.
+  3) 시나리오누출: 같은 상황의 ambiguous/disambiguated 버전이 train/val로 쪼개질 수 있음.
 
-처방(SSOT 방식):
-  1) 모든 BBQ 레코드에 sha1 내용해시 sample_id 부여(context|question|answers).
-  2) sample_id로 중복 제거(동일 문항이 train/val 양쪽에 새는 것 원천 차단).
-  3) 균형 val 추출 → val_ids.json(단일 진실원천) 기록.
-  4) train = 전체에서 val_ids를 **전역 배제** + assert 가드(교집합 0 보장).
-  5) 타깃 = 단일 토큰 "0"/"1"/"2" (회의 U2: 12토큰 잘림+속도 동시 해결).
+처방:
+  1) sha1 sample_id → val_ids.json(SSOT) → 전역 배제 + assert.
+  2) **옵션 순서 셔플**(라벨 재매핑) — train/val 모두. 모델이 위치 아닌 '기권의 의미'를 학습.
+  3) **시나리오 단위 dedup**(scenario_id = 질문+정렬된 선택지) → 한 시나리오는 train/val 한쪽에만.
+  4) **품질 필터**: unknown 옵션 정확히 1개 + 라벨 유효성.
+  5) 단일토큰 직답 타깃("0"/"1"/"2").
 
-출력(data/):
-  - val_ids.json          : 검증셋 sample_id 목록 (SSOT — 모든 생성기가 이걸 배제해야 함)
-  - bbq_val_clean.jsonl   : 자체검증셋 (context/question/answers/label/label_type/image_path/sample_id)
-  - bbq_v4_train.json     : LLaMA-Factory sharegpt (<image> + 단일토큰 직답)
-  - dataset_info.json     : 기존 키 보존 + bbq_v4 병합
+출력(data/): val_ids.json · bbq_val_clean.jsonl · bbq_v4_train.json · dataset_info.json(bbq_v4 병합)
 """
 
 import argparse
@@ -25,6 +23,7 @@ import json
 import os
 import random
 import sys
+from collections import defaultdict
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from prompts import SYSTEM_MESSAGE, USER_TEMPLATE, format_options, UNKNOWN_PATTERNS
@@ -39,9 +38,24 @@ def is_unknown(opt):
 
 
 def sample_id(context, question, answers):
-    """내용 기반 안정적 ID — train/val 중복 검출·배제의 키."""
     key = "|".join([str(context).strip(), str(question).strip(), "||".join(str(a).strip() for a in answers)])
     return hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+
+
+def scenario_id(question, answers):
+    """같은 상황 식별 — 질문+정렬 선택지(amb/dis는 context만 다름)로 묶어 train/val 분리."""
+    key = str(question).strip() + "||" + "||".join(sorted(str(a).strip() for a in answers))
+    return hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+
+
+def shuffle_opts(answers, label, seed_str):
+    """선택지 순서를 결정적으로 셔플 + 라벨 재매핑 (위치편향 제거)."""
+    rng = random.Random(seed_str)            # sample_id 기반 → 재현 가능
+    order = [0, 1, 2]
+    rng.shuffle(order)
+    new_answers = [answers[i] for i in order]
+    new_label = order.index(label)           # 정답(old label)의 새 위치
+    return new_answers, new_label
 
 
 def make_placeholder(path):
@@ -51,7 +65,7 @@ def make_placeholder(path):
 
 
 def to_sharegpt_single_token(rec, image_path):
-    """단일토큰 직답 타깃: assistant = '0'/'1'/'2' (회의 U2). 최종답은 LLM 생성물(규칙 충족)."""
+    """단일토큰 직답 타깃: assistant = '0'/'1'/'2' (셔플된 라벨). 최종답은 LLM 생성물."""
     user = "<image>" + USER_TEMPLATE.format(
         context=rec["context"], question=rec["question"],
         options_block=format_options(rec["answers"]))
@@ -59,7 +73,7 @@ def to_sharegpt_single_token(rec, image_path):
         "messages": [
             {"role": "system", "content": SYSTEM_MESSAGE},
             {"role": "user", "content": user},
-            {"role": "assistant", "content": str(int(rec["label"]))},  # 단일 토큰
+            {"role": "assistant", "content": str(int(rec["label"]))},
         ],
         "images": [image_path],
     }
@@ -80,48 +94,68 @@ def main():
 
     d = load_dataset(args.hf)
 
-    # 1) 전체 레코드 + sample_id, 2) 중복 제거
+    # 1) 중복제거 + 품질필터 + sample_id/scenario_id
     seen = {}
+    n_malformed = 0
     for split in d.keys():
         for r in d[split]:
             answers = list(r["choices"])
             if len(answers) != 3:
-                continue
+                n_malformed += 1; continue
+            if sum(is_unknown(a) for a in answers) != 1:   # 품질: unknown 정확히 1개
+                n_malformed += 1; continue
+            label = int(r["answer"])
+            if label not in (0, 1, 2):
+                n_malformed += 1; continue
             sid = sample_id(r["context"], r["question"], answers)
             if sid in seen:
-                continue  # 중복 문항 1회만
-            label = int(r["answer"])
+                continue
             seen[sid] = {
-                "sample_id": sid, "context": r["context"], "question": r["question"],
+                "sample_id": sid,
+                "scenario": scenario_id(r["question"], answers),
+                "context": r["context"], "question": r["question"],
                 "answers": answers, "label": label,
                 "label_type": "ambiguous" if is_unknown(answers[label]) else "disambiguated",
-                "category": r.get("category", split),
+                "category": split,
             }
     allrecs = list(seen.values())
 
-    # 3) 카테고리별 균형 val 추출
-    by_cat = {}
+    # 2) 카테고리별 → 시나리오 단위로 train/val 분리 (시나리오 atomic)
+    by_cat = defaultdict(lambda: defaultdict(list))
     for rec in allrecs:
-        by_cat.setdefault(rec["category"], []).append(rec)
-    val = []
-    for cat, recs in by_cat.items():
-        random.shuffle(recs)
-        amb = [x for x in recs if x["label_type"] == "ambiguous"]
-        dis = [x for x in recs if x["label_type"] == "disambiguated"]
-        half = args.val_per_cat // 2
-        val.extend(amb[:half] + dis[:half])
-    val_ids = {r["sample_id"] for r in val}
+        by_cat[rec["category"]][rec["scenario"]].append(rec)
 
-    # 4) train = 전체 − val_ids (전역 배제) + assert 가드
-    train = [r for r in allrecs if r["sample_id"] not in val_ids]
-    overlap = val_ids & {r["sample_id"] for r in train}
-    assert not overlap, f"LEAKAGE! train∩val = {len(overlap)}건"  # 누출 0 보장
+    val, train = [], []
+    for cat, scen_map in by_cat.items():
+        scen_keys = list(scen_map.keys())
+        random.shuffle(scen_keys)
+        cnt = 0
+        for sk in scen_keys:
+            recs = scen_map[sk]
+            if cnt < args.val_per_cat:
+                val.extend(recs); cnt += len(recs)   # 시나리오 통째로 val
+            else:
+                train.extend(recs)
+
+    # 시나리오 누출 0 보장
+    val_scens = {r["scenario"] for r in val}
+    leak = [r for r in train if r["scenario"] in val_scens]
+    assert not leak, f"SCENARIO LEAK! {len(leak)}건"
+    val_ids = {r["sample_id"] for r in val}
 
     random.shuffle(train)
     if args.max_train > 0:
         train = train[:args.max_train]
 
-    # 5) 쓰기 — SSOT + 검증셋 + 학습셋
+    # 3) 옵션 셔플(train/val 모두) — 위치편향 제거
+    def apply_shuffle(rec):
+        na, nl = shuffle_opts(rec["answers"], rec["label"], rec["sample_id"])
+        rec2 = dict(rec); rec2["answers"] = na; rec2["label"] = nl
+        return rec2  # label_type은 정답 텍스트 기준이라 셔플 무관(유지)
+    train = [apply_shuffle(r) for r in train]
+    val = [apply_shuffle(r) for r in val]
+
+    # 4) 쓰기
     with open(os.path.join(args.out_dir, "val_ids.json"), "w", encoding="utf-8") as f:
         json.dump(sorted(val_ids), f, indent=2)
     with open(os.path.join(args.out_dir, "bbq_val_clean.jsonl"), "w", encoding="utf-8") as f:
@@ -131,7 +165,6 @@ def main():
     with open(os.path.join(args.out_dir, "bbq_v4_train.json"), "w", encoding="utf-8") as f:
         json.dump([to_sharegpt_single_token(r, img) for r in train], f, ensure_ascii=False)
 
-    # dataset_info 병합(기존 키 보존)
     info_path = os.path.join(args.out_dir, "dataset_info.json")
     info = {}
     if os.path.exists(info_path):
@@ -146,12 +179,16 @@ def main():
     with open(info_path, "w", encoding="utf-8") as f:
         json.dump(info, f, ensure_ascii=False, indent=2)
 
+    # 라벨 위치 분포(셔플 확인) + 통계
+    from collections import Counter
+    pos = Counter(r["label"] for r in train)
     n_amb_t = sum(r["label_type"] == "ambiguous" for r in train)
     n_amb_v = sum(r["label_type"] == "ambiguous" for r in val)
-    print(f"[CLEAN] 전체 고유문항 {len(allrecs)} (중복제거 후)")
-    print(f"[CLEAN] VAL {len(val)} (amb {n_amb_v}/dis {len(val)-n_amb_v}) → val_ids.json + bbq_val_clean.jsonl")
-    print(f"[CLEAN] TRAIN {len(train)} (amb {n_amb_t}/dis {len(train)-n_amb_t}) → bbq_v4_train.json [단일토큰 타깃]")
-    print(f"[CLEAN] train∩val 교집합 = {len(overlap)}건 (0이어야 정상) ✅")
+    print(f"[CLEAN] 고유문항 {len(allrecs)} (불량 {n_malformed}건 제외)")
+    print(f"[CLEAN] VAL {len(val)} (amb {n_amb_v}/dis {len(val)-n_amb_v}) [시나리오 atomic]")
+    print(f"[CLEAN] TRAIN {len(train)} (amb {n_amb_t}/dis {len(train)-n_amb_t}) [단일토큰]")
+    print(f"[CLEAN] 정답 위치 분포(셔플 후, 균등해야 정상): 0={pos[0]} 1={pos[1]} 2={pos[2]}")
+    print(f"[CLEAN] 시나리오 누출 = 0 ✅")
 
 
 if __name__ == "__main__":
