@@ -29,3 +29,7 @@ secrets.*
 
 # 강의 자료(저작권) + 출력에 토큰 잔존 → 로컬 참고용만
 notebooks/
+
+# pod 접속 헬퍼(휘발성)
+infra/pod.sh
+infra/pod_push.sh

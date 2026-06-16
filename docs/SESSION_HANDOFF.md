@@ -6,18 +6,19 @@
 ---
 
 ## 1. ⏭️ 즉시 다음 액션 (지금 여기서 이어가기)
-**H100 전환 대기 중.** 사용자가 H100 pod 대여 후 SSH 주소를 줄 것임.
-1. 사용자가 준 H100 SSH로 `infra/pod.sh`의 `POD=` 갱신 (gitignore, 로컬 PC에 있음).
-2. `docs/H100_MIGRATION.md §3` 환경 설치(lf311 + unsloth_env), §9 순서대로.
-3. 배포키 git clone → HF/W&B 로그인(사용자, 키 타이핑 불가) → autopush 재기동.
-4. `setsid bash infra/pod_master_unsloth.sh >/workspace/master_unsloth.log 2>&1 </dev/null &` 런치.
-5. H100이면 v4 SFT ~3-4h. v4→eval→v5(GRPO)→eval→선택리포트→HF 자동.
+**[2026-06-15 09:10 UTC] 새 A6000(Ampere) pod에서 pod_master_unsloth.sh 가동 중.** 모니터링/결과수거가 다음 액션.
+1. pod 주소는 로컬 `infra/pod.sh`의 `POD=`에 있음(gitignore, 휘발성). 재시작 시 RunPod 프록시 주소 바뀜 → 새 주소로 갱신.
+2. 진행 점검: `bash infra/pod.sh '... > /workspace/x.txt; ...'` 후 패딩 읽기(아래 §10 PTY 주의). master 로그 = `/workspace/master_unsloth.log`.
+3. 완료 시 제출 CSV(`submissions/submission_v4.csv`,`_v5.csv`)를 **base64로 pod→로컬 수거**(GitHub 미사용) → 사용자가 DACON 업로드.
+4. HF 업로드는 HF_TOKEN 필요(현재 미설정, 학습엔 불필요). W&B는 **offline 모드**(키 주면 sync).
+5. A6000이라 v4 SFT ~12h. v4→eval→v5(GRPO)→eval→선택리포트.
 
-## 2. 🔴 현재 라이브 상태 (세션 클리어 시점)
-- **A6000 pod**(기존, 주소는 로컬 `infra/pod.sh`): v4 Unsloth SFT **학습중**(57k×3, ETA 12.5h). **H100 확정되면 버릴 헷지**.
-- **autopush 워커**: submission CSV 완성 시 GitHub 자동 push (배포키 gh_pod).
-- GitHub: `Sungho-pk42ac/dacon-2026-skku-multimodal-ai-bias-challenge` (main). 최신 커밋 ~`fcce93e`.
-- ⚠️ H100 올라가면 A6000 pod는 사용자가 종료. 학습은 H100에서 새로 시작(재현 가능).
+## 2. 🔴 현재 라이브 상태
+- **A6000(Ampere) 48GB 새 pod**(주소 로컬 `infra/pod.sh`): `pod_master_unsloth.sh` 가동(데이터→SFT v4→eval→제출→GRPO v5→eval→선택리포트). 로그 `/workspace/master_unsloth.log`.
+- **환경 검증됨**: lf311(tf5.6/torch2.6+cu124/CUDA✓) · unsloth_env(UNSLOTH_IMPORT_OK) · vllm0.18.
+- **코드 전송 = base64 직접전송**(GitHub clone 아님 — RunPod 프록시가 scp/sftp 차단). `/tmp/repo.tgz`(md5 51af6e4a…) 검증 일치. `data_build/test_full.csv`(8500)·`data/placeholder.jpg`(64×64 회색) pod에 존재.
+- **W&B=offline**(무인 학습 블로킹 방지). HF_TOKEN 미설정(업로드 단계만 영향).
+- ⚠️ 이전 H100 pod는 **셸 백엔드 불량**(인증OK·명령 무응답)으로 폐기, A6000로 회귀. GitHub 배포키 경로는 미사용(전 H100 키만 등록돼 있을 수 있음).
 
 ## 3. 결과 / 제출 현황
 | 모델 | Public | 상태 |
