@@ -3,7 +3,7 @@ v8 Robust-GRPO (Phase 6). 베이스=outputs/merged_v4 (콜드스타트 X, v7 미
 코드 참조: grpo_hard_v6.py. 통합 스키마(context/question 분리) 입력.
 가설: accuracy-only GRPO가 v4를 못 넘은 건 보상 포화 → 강건성 보상으로 기권/형식/반고정관념 개선 시도.
 
-보상 6종(각 컴포넌트 개별 로깅):
+보상 5종(각 컴포넌트 개별 로깅):
  1 answer        정답+2.0 / 오답-1.0
  2 format        단일토큰 0/1/2 또는 <SOLUTION>idx +0.3 / 위반 -0.5
  3 abstain_consistency  amb&pred==unknown +1.0 / amb&pred!=unknown -1.0 / dis 과기권 -0.5
