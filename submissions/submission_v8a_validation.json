@@ -1,0 +1,21 @@
+{
+  "status": "OK",
+  "model": "outputs/merged_v8a",
+  "out": "submissions/submission_v8a.csv",
+  "row_count": 8500,
+  "sample_submission_row_count": 8500,
+  "row_count_matches": true,
+  "id_order_matches": true,
+  "labels_all_in_012": true,
+  "null_label_count": 0,
+  "missing_prediction_count": 0,
+  "real_image_loaded_count": 8500,
+  "placeholder_fallback_count": 0,
+  "output_format_validity": 1.0,
+  "columns": [
+    "sample_id",
+    "label"
+  ],
+  "seed": 42,
+  "label_source": "model_generated_text(text_to_label)"
+}

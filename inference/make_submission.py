@@ -67,6 +67,8 @@ def main():
     ap.add_argument("--batch_size", type=int, default=8)
     ap.add_argument("--max_new_tokens", type=int, default=4)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--max_pixels", type=int, default=0,
+                    help="0(기본)=원본 해상도 그대로(심사환경과 동일·충실). >0이면 vision 토큰/메모리 상한 캡(속도/OOM 회피용, 입력 변경됨).")
     ap.add_argument("--allow_placeholder", action="store_true",
                     help="실제 이미지 없을 때 placeholder 허용(기본 금지). 켜도 검증에 카운트 기록.")
     ap.add_argument("--fallback_image", default="data/placeholder.jpg")
@@ -87,7 +89,21 @@ def main():
     model = AutoModelForImageTextToText.from_pretrained(
         args.model, torch_dtype=torch.bfloat16, device_map="auto",
         attn_implementation="sdpa").eval()
-    processor = AutoProcessor.from_pretrained(args.model)
+    # 기본: 모델 processor 기본 해상도 그대로(원본 충실, 심사환경과 동일). --max_pixels>0 일 때만 캡 적용.
+    if args.max_pixels and args.max_pixels > 0:
+        try:
+            processor = AutoProcessor.from_pretrained(args.model, max_pixels=args.max_pixels)
+        except TypeError:
+            processor = AutoProcessor.from_pretrained(args.model)
+        try:
+            if hasattr(processor, "image_processor"):
+                processor.image_processor.max_pixels = args.max_pixels
+        except Exception as e:
+            logger.warning("max_pixels 설정 실패(무시): %s", str(e)[:60])
+        logger.info("max_pixels 캡 적용: %d", args.max_pixels)
+    else:
+        processor = AutoProcessor.from_pretrained(args.model)
+        logger.info("max_pixels 미적용(원본 해상도, processor 기본)")
     processor.tokenizer.padding_side = "left"
 
     df = pd.read_csv(args.test_csv)
