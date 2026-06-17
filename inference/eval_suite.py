@@ -42,8 +42,9 @@ def main():
     ap.add_argument("--fmt", choices=["single", "evidence"], default="single")
     ap.add_argument("--data", default="/workspace/v8_eval.json")
     ap.add_argument("--batch", type=int, default=24)
+    ap.add_argument("--max_new", type=int, default=0, help="0=fmt 기본(single 4/evidence 48). 비파인튜닝 base/외부모델은 자유텍스트라 24+ 권장.")
     args = ap.parse_args()
-    max_new = 4 if args.fmt == "single" else 48
+    max_new = args.max_new if args.max_new > 0 else (4 if args.fmt == "single" else 48)
     sysmsg = SYS_EVID if args.fmt == "evidence" else SYSTEM_MESSAGE
     stop = [S_END] if args.fmt == "evidence" else None
 
