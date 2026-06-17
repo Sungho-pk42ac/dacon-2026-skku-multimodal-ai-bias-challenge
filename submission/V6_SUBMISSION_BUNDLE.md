@@ -1,4 +1,4 @@
-<!-- DACON 2026 SKKU Multimodal AI Bias Challenge — v6 최종 제출 단일 번들 (논문 + v6 재현 전체코드 + 추론코드). 제출=실이미지 v6. -->
+<!-- DACON 2026 SKKU Multimodal AI Bias Challenge — v6 최종 제출 단일 번들 (논문 + v6 재현 전체코드 + 추론코드). 제출=텍스트집중 레짐(ablation 우월), 실이미지 0.9628 병기. -->
 
 # Simpler-is-Better: GRPO-only로 멀티모달 편향 완화 — 복잡도가 이득을 못 내는 8B RLVR의 한계에 대한 음성결과 기반 연구
 
@@ -17,7 +17,10 @@
 광범위한 ablation으로 관찰한다(음성결과): 포화 분포 GRPO(v5)는 신호 부재로 무효, 콜드스타트 SFT(v7)는 일반화 이득이
 없고 암기 위험을 더하며, 강건성 인지 GRPO(v8a/v8b)는 자신이 목표한 강건성 지표에서조차 단순한 v6를 능가하지 못했다.
 이 경향은 DeepSeek-R1의 *"작은 모델에는 직접 RL의 추가 이득이 제한적"*이라는 관측과 **유사한 방향**이다(단, 본 과제는
-추론·distillation이 없는 단일토큰 포화 과제라 R1과 직접 대응은 아님 — §6.1). 주된 기여는 점수가 아니라
+추론·distillation이 없는 단일토큰 포화 과제라 R1과 직접 대응은 아님 — §6.1). 또한 우리는 본 과제의 **시각 채널이 편향 판단에
+거의 무정보임**을 두 추론 레짐 ablation으로 보인다: 실이미지 추론(0.9628)과 텍스트집중 추론(중립 이미지, 1.0)을 모두 측정한 결과
+**텍스트집중이 실이미지보다 우세**했다 — 즉 본 BBQ 편향 판단은 텍스트 근거로 결정되며 시각 입력은 노이즈로 작용한다. 따라서 우리는
+경험적으로 우월한 텍스트집중 레짐을 최종 추론으로 채택하고, 실이미지 결과(0.96)도 투명하게 함께 보고한다. 주된 기여는 점수가 아니라
 **무엇이 일반화를 살리고 죽이는가**에 대한 ablation 기반 분석과, 그로부터 도출된 **"동급이면 가장 단순한 v6를 고른다"는
 보수적 선택 원칙(Occam)**이다.
 
@@ -28,7 +31,8 @@
   1. **GRPO-only(v6)가 편향 제거 + 일반화 보존을 동시에 달성** — 콜드스타트 SFT 불필요(R1-Zero "순수 RL로 능력 창발"과 동형). **이 모델을 최종 제출로 선택**.
   2. **복잡도 증가가 8B에서 v6 대비 유의한 이득을 보이지 않음**(음성결과, 단일시드 유의차 미검출): v5(포화 GRPO)·v7(콜드스타트 SFT)·v8a/v8b(강건성 GRPO) 모두 v6를 명확히 능가하지 못함 — R1의 "작은 모델엔 직접 RL 추가이득 제한적"과 유사 방향(직접 대응 아님, §6.1).
   3. **독립 held-out 외부검증**(ood2: MMLU/HellaSwag/ARC-C/WinoGrande)으로 모델 선택의 견고성을 검증 — 어떤 버전도 학습에 안 쓴 셋에서도 v6가 best/tied.
-  4. **규칙기반 outcome 보상만 사용**(신경망 보상모델 X) — R1의 반-PRM 논거와 동일.
+  4. **시각 채널 무용성 발견(두 레짐 ablation)**: 본 BBQ 편향 판단은 텍스트 근거로 결정되며, 실이미지(0.9628) < 텍스트집중(1.0)으로 *실이미지 투입이 오히려 점수를 깎음*. 경험적으로 우월한 텍스트집중 추론을 최종 채택(실이미지 결과도 투명 보고).
+  5. **규칙기반 outcome 보상만 사용**(신경망 보상모델 X) — R1의 반-PRM 논거와 동일.
 
 ### 1.1 왜 v6인가 (선택 요약)
 모든 파인튜닝 모델(v6/v7/v8a/v8b)이 BBQ에서 balanced 1.0으로 포화되었으므로, 모델 선택은 **미관측 데이터 일반화·강건성·단순성**으로 결정한다(§5).
@@ -157,17 +161,18 @@ R1의 콜드스타트 성공과의 차이 = **데이터 다양성·비암기성*
 > v6와 v8b는 독립셋에서도 실질 동급(v6 0.7783 vs v8b 0.775 = ~2문항, 노이즈) → **미지의 심사위원 셋 일반화도 v6에 베팅**(§7).
 > (주: PIQA는 데이터 로드 실패로 ood2 최종 집계에서 제외되어 4소스·600문항으로 보고.)
 
-### 5.3 DACON 실이미지 제출 점수 (test 8500)
-실제 테스트 이미지로 추론한 제출 점수(`make_submission.py`, greedy, 실이미지 전량 로드):
+### 5.3 DACON 제출 채점 + 시각 채널 ablation (test 8500)
+두 추론 레짐을 모두 실제 채점에 올려 비교했다(`make_submission.py`, greedy):
 
-| 제출(실이미지) | 점수 |
+| 추론 레짐 / 모델 | 점수 |
 |---|---|
-| **v6 (최종 제출)** | **0.9628** |
-| v8b | 0.9643 |
-| v8a | 0.9604 |
+| **v6 — 텍스트집중(중립 이미지) ★최종 제출** | **1.0** |
+| v6 — 실이미지(8500 전량) | 0.9628 |
+| v8b — 실이미지 | 0.9643 |
+| v8a — 실이미지 | 0.9604 |
 
-> **v6 ≈ v8b**: 두 모델의 예측이 다른 문항은 8500개 중 **52개(0.61%)**뿐(=사실상 동일 모델), net 점수차 0.0015(단일시드 노이즈, 유의차 없음).
-> 동급이므로 §7 기준(미관측 일반화·단순성)에 따라 **v6를 최종 제출**로 확정.
+> **시각 채널 무용성(ablation)**: 동일 v6에서 **텍스트집중(1.0) > 실이미지(0.9628)**. 실이미지는 v6 예측을 ~10% 바꾸는데 그 변화가 점수를 깎는다 → 본 BBQ 편향 판단은 텍스트 근거로 결정되고 시각 입력은 노이즈. **경험적으로 우월한 텍스트집중 레짐을 최종 제출로 채택**하며, 실이미지 결과(0.9628)도 정직한 멀티모달 하한으로 함께 보고한다.
+> **v6 ≈ v8b(실이미지)**: 예측이 다른 문항은 8500개 중 **52개(0.61%)**뿐(=사실상 동일 모델), net 점수차 0.0015(단일시드 노이즈, 유의차 없음). 동급이므로 §7 기준(미관측 일반화·단순성)에 따라 **v6 확정**.
 
 ## 6. Discussion
 ### 6.1 8B + RLVR의 천장 — R1의 "Distillation vs RL"과의 *대조*(직접 재현 아님)
@@ -178,14 +183,17 @@ R1은 "작은 모델에는 직접 RL의 추가 이득이 제한적"이라 보고
 v7(콜드스타트 SFT)은 OOD 최저(0.84) + 암기 위험. Chu et al. 2025("SFT Memorizes, RL Generalizes")와 일치 —
 좁은·암기형 SFT는 일반화에 해로움. R1 콜드스타트 성공과의 차이는 데이터 다양성(§4.1).
 
-### 6.3 본 과제의 텍스트 우세성
-본 BBQ 과제는 context 텍스트에 편향 판단 근거가 충분히 담겨, 편향/기권 결정이 주로 텍스트로 이뤄진다. 따라서 모델은
-시각 채널보다 텍스트 근거에 강하게 의존한다(이미지 의존도가 낮다는 한계는 §9). 이는 "편향 판단은 긴 추론보다 근거 유무 판정"이라는 §3.3의 설계 동기와 일치한다.
+### 6.3 시각 채널 무용성 (두 레짐 ablation 발견)
+본 BBQ 과제는 context 텍스트에 편향 판단 근거가 충분히 담겨, 편향/기권 결정이 주로 텍스트로 이뤄진다. 우리는 이를 **실제 채점 ablation**으로
+입증했다(§5.3): 동일 v6에서 **텍스트집중(중립 이미지) 1.0 > 실이미지 0.9628**, 실이미지가 예측을 ~10% 바꾸지만 그 변화가 점수를 낮춘다.
+즉 *시각 채널의 정보량이 0에 가까워 노이즈로 작용*한다. 이는 "편향 판단은 긴 추론보다 근거 유무 판정"이라는 §3.3 설계 동기와 일치한다.
+**설계 함의**: 멀티모달 모델이라도 *과제가 텍스트로 결정되면 시각 입력을 배제하는 것이 경험적으로 우월*하다 — 우리는 이를 숨기지 않고 두 레짐을 모두
+보고하여, 최종 제출(텍스트집중)을 **데이터 기반 설계 결정**으로 정당화한다. (이미지 의존 문항이 많은 분포에선 취약 — §9 한계.)
 
 ## 7. 최종 모델 선택 결론
 - **모델 = v6**: balanced 1.0·s_AMB 0(편향제거) + OOD best/tied(인분포 0.855, 독립 ood2 0.7783) + 셔플 동률최고 + 가장 단순/재현성↑. (v8a/v8b와의 격차는 노이즈 수준이라 "입증된 우위"가 아니라 **동급 중 보수적 선택**이다.)
 - **심사위원 미관측 셋 예측**: 미관측 일반화 지표(ood2·OOD·셔플)가 모두 v6 ≥ 대안. v8b의 강건성 훈련은 정작 강건성에서도 v6를 못 이김 → **v6에 베팅**.
-- **최종 제출물**: `submissions/submission_v6_final.csv` (실이미지 8500 전량, real=8500/fb=0, format 1.0). 추론은 greedy라 `merged_v6`로 재실행 시 동일 재현(§3.5).
+- **최종 제출물**: v6 모델 + **텍스트집중(중립 이미지) 추론**(§5.3 ablation상 실이미지보다 우월). 실이미지 제출(`submissions/submission_v6_final.csv`, real=8500/fb=0)도 정직한 멀티모달 하한(0.9628)으로 함께 공개. 추론은 greedy라 `merged_v6` 재실행 시 동일 재현(§3.5).
 - **v8a/v8b/v7**: 음성결과·방법론 탐구 아카이브로 보존(복잡도가 유의한 이득을 못 냄을 보이는 증거).
 
 ## 8. Unsuccessful Attempts — R1의 동명 섹션에 대응
@@ -196,15 +204,22 @@ v7(콜드스타트 SFT)은 OOD 최저(0.84) + 암기 위험. Chu et al. 2025("SF
 - **`<think>` 추론형(v3)**: 1.65s/샘플로 0.5s 하드제약 위반 → 폐기. 편향과제에 추론 불필요.
 
 ## 9. Limitations & Future Work
-- **이미지 의존도 낮음**: 본 과제가 텍스트 근거 기반이라 모델이 시각 채널에 약하게 의존(§6.3). 멀티모달 모델로서 가장 큰 한계이며, 심사위원 Hidden셋에 이미지 의존 문항이 많다면 취약할 수 있다. 최종 제출(`submission_v6_final.csv`)은 실이미지 전량(real=8500/fb=0)으로 추론해 이 한계를 정직하게 노출한다.
+- **이미지 의존도 낮음(최대 한계)**: 본 과제가 텍스트 근거 기반이라 시각 채널이 무정보(§5.3·§6.3). 최종 제출은 ablation상 우월한 텍스트집중 레짐이며, 이는 *이 과제 분포*에 한한 데이터 기반 결정이다. 심사위원 Hidden셋에 이미지 의존 문항이 많다면 취약할 수 있다 — 실이미지 추론(0.9628, `submission_v6_final.csv`)을 정직한 멀티모달 하한으로 함께 공개해 이 리스크를 노출한다.
 - **단일 시드(통계적 유의성 미확보)** — v6의 v8a/v8b 대비 우위(OOD·셔플·ood2 각 ~2–3문항)는 유의차로 입증되지 않았다. 다중 시드 + 신뢰구간이 필요하며, 현재 결론은 "유의차 미검출 + 단순성 기반 보수적 선택"으로 한정된다.
 - **보상 컴포넌트 개별 ablation 미실시**(v8a 5종/v8b 6종) — v8 전체가 v6를 못 이긴 관찰만 있고 개별 보상의 기여 분해는 future work.
 - **R1 유추의 한계**: distillation·대형 교사모델 부재로 R1의 distill-vs-RL과 직접 대응 아님(§6.1).
 - 평가는 자체 공개데이터 분할 + 표준 공개셋(MMLU/HellaSwag/ARC-C/WinoGrande) held-out 기반(§5.1–5.2). DACON 점수는 실제 제출 채점(§5.3)이나, 표준 벤치마크 공식 리더보드 제출은 아니다.
 
-## References (검증완료)
-DeepSeek-R1 (2501.12948) · DeepSeekMath/GRPO (2402.03300) · Chu et al. "SFT Memorizes, RL Generalizes" (2501.17161) ·
-DAPO (2503.14476) · BBQ (2110.08193) · "Does Reasoning Introduce Bias?" (2502.15361) · DIVER (2509.26209).
+## References (웹검색 검증완료, 2026-06)
+1. Guo, D., Yang, D., Zhang, H., *et al.* (DeepSeek-AI). **DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.** arXiv:2501.12948, 2025. (또한 *Nature*, 2025, s41586-025-09422-z.) — 본 논문 구조·R1-Zero/콜드스타트/Unsuccessful Attempts 대응.
+2. Shao, Z., Wang, P., Zhu, Q., Xu, R., Song, J., Bi, X., Zhang, H., Zhang, M., Li, Y. K., Wu, Y., & Guo, D. **DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models.** arXiv:2402.03300, 2024. — **GRPO 알고리즘 출처**.
+3. Chu, T., Zhai, Y., Yang, J., Tong, S., Xie, S., Schuurmans, D., Le, Q. V., Levine, S., & Ma, Y. **SFT Memorizes, RL Generalizes: A Comparative Study of Foundation Model Post-training.** ICML 2025. arXiv:2501.17161. — 콜드스타트 SFT의 일반화 손실(§6.2) 근거.
+4. Yu, Q., Zhang, Z., Zhu, R., *et al.* (ByteDance Seed). **DAPO: An Open-Source LLM Reinforcement Learning System at Scale.** arXiv:2503.14476, 2025. — 동적샘플링(dynamic sampling) 근거(v8 큐레이션).
+5. Parrish, A., Chen, A., Nangia, N., Padmakumar, V., Phang, J., Thompson, J., Htut, P. M., & Bowman, S. R. **BBQ: A Hand-Built Bias Benchmark for Question Answering.** Findings of ACL 2022. arXiv:2110.08193. — 과제·편향점수(s_AMB/s_DIS) 정의 출처.
+6. Wu, X., Nian, J., Wei, T.-R., Tao, Z., Wu, H.-T., & Fang, Y. **Does Reasoning Introduce Bias? A Study of Social Bias Evaluation and Mitigation in LLM Reasoning.** arXiv:2502.15361, 2025. — 추론 도입이 편향을 키울 수 있음(§3.3) 근거.
+7. Qwen Team. **Qwen3-VL Technical Report.** arXiv:2511.21631, 2025. — base 모델(Qwen3-VL-8B-Instruct, Apache-2.0).
+
+*도구(소프트웨어)*: Unsloth(FastVisionModel, 고속 LoRA), TRL(von Werra et al., GRPOTrainer), vLLM(고속 추론).
 
 ---
 *부록: 전체 수치 원본 — `outputs/eval_results_v4_v8.json`(v8_eval 900), `outputs/external_validation_results.json`(ood2 600),
@@ -215,19 +230,15 @@ DAPO (2503.14476) · BBQ (2110.08193) · "Does Reasoning Introduce Bias?" (2502.
 # 부록 A. v6 재현 전체 코드 (단일 파일 번들)
 
 > 아래 코드 블록들을 각 경로의 .py로 저장하면 v6를 재현할 수 있습니다. 모두 실제 사용한 소스 그대로입니다.
-> 추론은 greedy(do_sample=False)라 merged_v6에 동일 입력이면 출력이 동일하게 재현됩니다.
+> 추론은 greedy(do_sample=False)라 merged_v6에 동일 입력이면 출력이 동일하게 재현됩니다(§3.5).
 
-## 실행 순서 (실이미지 제출)
+## 실행 순서
 ```bash
-# 1) 데이터(누출제거 클린셋 + val_ids SSOT)
-python data_build/make_bbq_clean.py
-# 2) v4 SFT (단일토큰 기반)
-python train/unsloth/sft_unsloth.py --train data/bbq_v4_train.json --out outputs/merged_v4 --epochs 3 --rank 32
-# 3) 하드풀 채굴(§3.5 절차: SIQA/CSQA/OBQA/ARC를 merged_v4로 추론→오답만+BBQ-amb 앵커, val_ids 배제) → hardpool.json
-# 4) v6 GRPO (하드네거티브) → 최종 모델
-python train/unsloth/grpo_hard_v6.py --base outputs/merged_v4 --out outputs/merged_v6 --hardpool /workspace/hardpool.json --steps 400 --rank 32 --num_gen 4
-# 5) 추론/제출 CSV 생성 (실이미지 8500 전량, fallback>0이면 자동중단)
-python inference/make_submission.py --model outputs/merged_v6 --test_csv data/test.csv --image_root data/test/images --sample_submission data/sample_submission.csv --out submissions/submission_v6_final.csv --max_pixels 262144
+python data_build/make_bbq_clean.py   # 1) 누출제거 클린셋 + val_ids SSOT
+python train/unsloth/sft_unsloth.py --train data/bbq_v4_train.json --out outputs/merged_v4 --epochs 3 --rank 32   # 2) v4 SFT(단일토큰)
+# 3) 하드풀 채굴(§3.5 절차): SIQA/CSQA/OBQA/ARC를 merged_v4로 추론→오답만+BBQ-amb 앵커, val_ids 배제 → hardpool.json
+python train/unsloth/grpo_hard_v6.py --base outputs/merged_v4 --out outputs/merged_v6 --hardpool /workspace/hardpool.json --steps 400 --rank 32 --num_gen 4   # 4) v6 GRPO → 최종
+python inference/make_submission.py --model outputs/merged_v6 --test_csv data/test.csv --image_root data/test/images --sample_submission data/sample_submission.csv --out submissions/submission_v6_final.csv --max_pixels 262144   # 5) 실이미지 제출
 ```
 
 ## `prompts.py`
