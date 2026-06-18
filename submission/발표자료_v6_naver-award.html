@@ -58,7 +58,7 @@
     <div class="kicker" style="margin-bottom:14px">2026 성균관대학교 멀티모달 AI Bias 챌린지 · 최종 제출 발표</div>
     <div class="h1en" style="font-size:108px;line-height:.96;letter-spacing:-3px">SIMPLER<br>IS <span class="green">BETTER</span></div>
     <div style="margin-top:22px;font-size:19px;font-weight:600">GRPO-only로 멀티모달 AI 편향을 완화하다</div>
-    <div class="muted" style="margin-top:8px;font-size:13.5px;line-height:1.7">복잡도가 이득을 못 내는 8B RLVR의 한계에 대한 음성결과 기반 연구<br>base: Qwen3-VL-8B-Instruct (Apache-2.0) · 최종 제출 모델 <b class="green">HardNeg-GRPO</b></div>
+    <div class="muted" style="margin-top:8px;font-size:13.5px;line-height:1.7">복잡도가 이득을 못 내는 8B RLVR의 한계에 대한 음성결과 기반 연구<br>base: Qwen3-VL-8B-Instruct[7] (Apache-2.0) · 최종 제출 모델 <b class="green">HardNeg-GRPO</b></div>
   </div>
   <div style="position:absolute;left:5%;bottom:8%"><div class="en" style="font-weight:800;font-size:32px;letter-spacing:-1px">TEAM <span class="green">pk42ac</span></div><div class="muted" style="font-size:13px;margin-top:6px">박성호 · 2026.06</div></div>
 </section>
@@ -72,7 +72,7 @@
     <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">02 METHOD</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.10–18</span><br>왜 GRPO인가<br>알고리즘 · 보상<br>학습데이터 설계<br>강건성·일반화<br>재현 절차</div></div>
     <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">03 RESULTS</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.19–23</span><br>복잡도 기각<br>인분포 결과<br>독립 일반화<br>DACON 채점</div></div>
     <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">04 DISCUSSION</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.24–27</span><br>논의 3가지<br>최종 모델 선택<br>음성결과<br>한계</div></div>
-    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">05 CLOSING</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.28–30</span><br>Future Work<br>결론<br>References</div></div>
+    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">05 CLOSING</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.28–33</span><br>Future Work · 결론<br>학습로그 · 비교표<br>References</div></div>
   </div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>02</span></div>
 </section>
@@ -98,7 +98,7 @@
 <section class="slide">
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
   <div class="ttl"><div class="k">ABSTRACT</div><h2>콜드스타트 없이 GRPO만으로 편향을 제거하고,<br>복잡도가 그 이상을 못 낸다는 것을 ablation으로 보인다</h2></div>
-  <div style="position:absolute;left:2.2%;top:33%;width:55%"><div class="body" style="font-size:12.5px;line-height:1.85"><b class="green">HardNeg-GRPO</b>는 콜드스타트 SFT 없이 GRPO만으로(R1-Zero 순수 RL과 동형) 편향을 제거하면서 일반화를 보존하고, 이를 최종 제출로 택한다. 나아가 <b>더 복잡한 RL 변형이 8B에서 유의한 이득을 못 냄</b>을 광범위한 ablation으로 관찰한다(음성결과): 포화 GRPO는 신호 부재, 콜드스타트 SFT는 일반화 이득 없이 암기 위험, 강건성 GRPO는 자신이 목표한 지표에서조차 단순한 HardNeg-GRPO를 못 이겼다. 주된 기여는 점수가 아니라 <b>“무엇이 일반화를 살리고 죽이는가”의 분석</b>이다.</div></div>
+  <div style="position:absolute;left:2.2%;top:33%;width:55%"><div class="body" style="font-size:12.5px;line-height:1.85"><b class="green">HardNeg-GRPO</b>는 콜드스타트 SFT 없이 GRPO만으로(R1-Zero[1] 순수 RL과 동형) 편향을 제거하면서 일반화를 보존하고, 이를 최종 제출로 택한다. 나아가 <b>더 복잡한 RL 변형이 8B에서 유의한 이득을 못 냄</b>을 광범위한 ablation으로 관찰한다(음성결과): 포화 GRPO는 신호 부재, 콜드스타트 SFT는 일반화 이득 없이 암기 위험, 강건성 GRPO는 자신이 목표한 지표에서조차 단순한 HardNeg-GRPO를 못 이겼다. 주된 기여는 점수가 아니라 <b>“무엇이 일반화를 살리고 죽이는가”의 분석</b>이다.</div></div>
   <div style="position:absolute;right:2.2%;top:33%;width:38%"><div class="gcard" style="padding:18px 20px"><div class="kicker" style="margin-bottom:14px">3 TAKEAWAYS</div>
     <div style="display:flex;gap:12px;margin-bottom:14px"><span class="num green" style="font-size:30px">01</span><div class="body" style="font-size:11.5px">콜드스타트 SFT가 일반화의 적. RL 단독은 일반화를 해치지 않는다.</div></div>
     <div style="display:flex;gap:12px;margin-bottom:14px"><span class="num green" style="font-size:30px">02</span><div class="body" style="font-size:11.5px">GRPO 향상폭은 노이즈 수준. base 잠재능력 한계 내.</div></div>
@@ -145,11 +145,11 @@
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
   <div class="ttl"><div class="k">RELATED WORK</div><h2>선행 연구 속에서 본 연구의 위치</h2></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:27%;display:grid;grid-template-columns:1fr 1fr;gap:13px">
-    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">DeepSeek-R1 / R1-Zero <span class="muted en" style="font-size:10px">2501.12948</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">SFT 없이 순수 RL로 추론 창발. → 본 연구는 R1-Zero의 <b>SFT-free RL</b>과 논문 구조(Unsuccessful Attempts)를 차용.</div></div>
-    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">GRPO / DeepSeekMath <span class="muted en" style="font-size:10px">2402.03300</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">critic-free 그룹 정규화 RL. → 본 연구의 <b>학습 알고리즘</b>.</div></div>
-    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">SFT Memorizes, RL Generalizes <span class="muted en" style="font-size:10px">2501.17161</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">좁은·암기형 SFT는 일반화에 해롭다. → <b>ColdStart 음성결과</b> 해석의 근거.</div></div>
-    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">BBQ Benchmark <span class="muted en" style="font-size:10px">2110.08193</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">편향 QA 벤치마크·편향점수(s<sub>AMB</sub>/s<sub>DIS</sub>) 정의. → <b>과제·지표</b>의 출처.</div></div>
-    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">Does Reasoning Introduce Bias? <span class="muted en" style="font-size:10px">2502.15361</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">추론 도입이 편향을 키울 수 있음. → <b>단일토큰 직답</b> 설계 근거.</div></div>
+    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">[1] DeepSeek-R1 / R1-Zero <span class="muted en" style="font-size:10px">2501.12948</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">SFT 없이 순수 RL로 추론 창발. → 본 연구는 R1-Zero의 <b>SFT-free RL</b>과 논문 구조(Unsuccessful Attempts)를 차용.</div></div>
+    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">[2] GRPO / DeepSeekMath <span class="muted en" style="font-size:10px">2402.03300</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">critic-free 그룹 정규화 RL. → 본 연구의 <b>학습 알고리즘</b>.</div></div>
+    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">[3] SFT Memorizes, RL Generalizes <span class="muted en" style="font-size:10px">2501.17161</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">좁은·암기형 SFT는 일반화에 해롭다. → <b>ColdStart 음성결과</b> 해석의 근거.</div></div>
+    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">[5] BBQ Benchmark <span class="muted en" style="font-size:10px">2110.08193</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">편향 QA 벤치마크·편향점수(s<sub>AMB</sub>/s<sub>DIS</sub>) 정의. → <b>과제·지표</b>의 출처.</div></div>
+    <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">[6] Does Reasoning Introduce Bias? <span class="muted en" style="font-size:10px">2502.15361</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">추론 도입이 편향을 키울 수 있음. → <b>단일토큰 직답</b> 설계 근거.</div></div>
     <div class="card" style="padding:13px 16px;border-left:3px solid var(--green)"><div style="font-size:12.5px;font-weight:700">본 연구의 위치</div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">이들을 <b>8B 멀티모달 편향 과제</b>에 적용·검증하고, “복잡도 무이득”을 정직한 <b>음성결과</b>로 보고.</div></div>
   </div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>07</span></div>
@@ -227,7 +227,7 @@
   <div style="position:absolute;left:2.2%;right:2.2%;top:29%;display:flex;gap:2%">
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--coral)">
       <div style="font-size:14px;font-weight:700">① SFT만으로는 안 된다</div>
-      <div class="body muted" style="font-size:11.5px;line-height:1.7;margin-top:10px">좁은 BBQ를 SFT로 학습하면 정답·<b>위치</b>를 암기해 일반화가 무너진다(Chu 2025 “SFT Memorizes, RL Generalizes”). 실제로 콜드스타트 SFT(ColdStart)는 OOD 최저(0.84)를 기록했다.</div>
+      <div class="body muted" style="font-size:11.5px;line-height:1.7;margin-top:10px">좁은 BBQ를 SFT로 학습하면 정답·<b>위치</b>를 암기해 일반화가 무너진다(Chu et al. 2025 [3] “SFT Memorizes, RL Generalizes”). 실제로 콜드스타트 SFT(ColdStart)는 OOD 최저(0.84)를 기록했다.</div>
     </div>
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--green)">
       <div style="font-size:14px;font-weight:700">② 편향 완화 = ‘정책’ 학습</div>
@@ -248,7 +248,7 @@
   <div class="subtab"><span>Why GRPO</span><span class="on">Algorithm &amp; Reward</span><span>Data Design</span><span>Reproduction</span></div>
   <div class="ttl" style="top:13%"><div class="k">§3.1–3.2 ALGORITHM + REWARD</div><h2>Critic 없는 그룹 정규화 RL · 규칙기반 보상 2종</h2></div>
   <div style="position:absolute;left:2.2%;top:30%;width:46%">
-    <div class="kicker">GRPO (Shao et al. 2024)</div>
+    <div class="kicker">GRPO [2] (Shao et al. 2024)</div>
     <div class="body" style="margin-top:10px;font-size:12px;line-height:1.75">한 프롬프트에 <b>G개 출력</b>을 샘플링하고, 그룹 내에서 보상을 정규화한 advantage로 정책을 갱신한다. 별도 value critic이 필요 없어 가볍다.</div>
     <div class="gcard" style="margin-top:14px;padding:18px 20px;text-align:center"><div class="en" style="font-size:22px;font-weight:600">A<sub>i</sub> = ( r<sub>i</sub> − mean(r) ) / std(r)</div><div class="muted" style="font-size:11px;margin-top:10px">+ KL 규제 · num_generations G=4</div></div>
     <div class="body muted" style="margin-top:14px;font-size:11px;line-height:1.6">보상에 분산이 있어야 advantage가 0이 아니다 → <b>하드네거티브 데이터가 필수</b>(다음 장).</div>
@@ -269,7 +269,7 @@
   <div class="ttl" style="top:13%"><div class="k">§3.3–3.4 DESIGN RATIONALE</div><h2>왜 단일토큰 직답인가 · 왜 하드네거티브인가</h2></div>
   <div style="position:absolute;left:2.2%;top:31%;width:46%">
     <div class="kicker">단일토큰 직답 — R1과의 차이</div>
-    <div class="body" style="margin-top:10px;font-size:12px;line-height:1.75">R1은 추론 체인을 유도하지만, 본 과제는 <b>단일토큰(0/1/2) 직답</b>이다. 편향 판단은 긴 추론보다 <b>근거 유무 판정</b>에 가깝고, 추론 도입이 오히려 편향을 키울 수 있다(2502.15361).</div>
+    <div class="body" style="margin-top:10px;font-size:12px;line-height:1.75">R1은 추론 체인을 유도하지만, 본 과제는 <b>단일토큰(0/1/2) 직답</b>이다. 편향 판단은 긴 추론보다 <b>근거 유무 판정</b>에 가깝고, 추론 도입이 오히려 편향을 키울 수 있다 [6].</div>
     <div class="card" style="margin-top:14px;padding:14px 16px;border-left:3px solid var(--coral)"><div class="body" style="font-size:11.5px;line-height:1.6"><b>실증:</b> 추론형 Explore-3은 <b>1.65s/샘플</b>로 0.5s 하드제약을 3.3배 위반 → 폐기. 단일토큰은 ~0.06–0.08s.</div></div>
   </div>
   <div style="position:absolute;right:2.2%;top:31%;width:46%">
@@ -407,7 +407,7 @@
     <div style="font-family:'Inter';font-size:12px;font-weight:600;color:var(--green);letter-spacing:1px">§4 ABLATION</div>
     <div style="font-size:25px;font-weight:700;margin-top:3px;line-height:1.25">왜 <span class="green">HardNeg-GRPO</span>인가<br>— 복잡도가 진 자리</div>
     <div class="body" style="margin-top:14px;font-size:12px;line-height:1.75">더 복잡한 RL 변형 4종을 모두 시험하고 ablation으로 기각했다. 어느 것도 단순한 HardNeg-GRPO를 <b>유의하게 넘지 못했다</b>(단일시드, 노이즈 수준). 복잡도가 작동조차 안 한 게 아니라, <b>작동했지만 HardNeg 수준으로 수렴</b>했다.</div>
-    <div class="gcard" style="margin-top:16px;padding:14px 16px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>“SFT Memorizes, RL Generalizes.”</b> 콜드스타트 암기는 일반화의 적, GRPO 단독은 일반화를 해치지 않는다 — Chu 2025와 일치.</div></div>
+    <div class="gcard" style="margin-top:16px;padding:14px 16px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>“SFT Memorizes, RL Generalizes.”</b> 콜드스타트 암기는 일반화의 적, GRPO 단독은 일반화를 해치지 않는다 — Chu et al. 2025 [3]와 일치.</div></div>
   </div>
   <svg style="position:absolute;right:2%;top:18%;width:54%;height:76%" viewBox="0 0 560 480">
     <g stroke="#0A0A0A" stroke-width="1" fill="none"><line x1="120" y1="80" x2="300" y2="240"/><line x1="120" y1="200" x2="300" y2="240"/><line x1="120" y1="320" x2="300" y2="240"/><line x1="120" y1="440" x2="300" y2="240"/><line x1="392" y1="240" x2="470" y2="160"/><line x1="392" y1="240" x2="470" y2="320"/></g>
@@ -500,7 +500,7 @@
   <div class="ttl"><div class="k">§6 DISCUSSION</div><h2>무엇이 일반화를 좌우했나 — 논의 3가지</h2></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:30%;display:flex;gap:2%">
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--green)"><div class="num green" style="font-size:34px">6.1</div><div style="font-size:14px;font-weight:700;margin-top:8px">8B + RLVR의 천장</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">8B에 더 복잡한 RL을 얹어도 단순 GRPO-only를 유의하게 못 넘음 → R1의 “작은 모델엔 직접 RL 추가이득 제한적”과 <b>유사 방향</b>(직접 대응 아님).</div></div>
-    <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--coral)"><div class="num" style="font-size:34px;color:var(--coral)">6.2</div><div style="font-size:14px;font-weight:700;margin-top:8px">콜드스타트 vs GRPO-only</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">ColdStart는 OOD 최저(0.84) + 암기 위험. <b>좁은·암기형 SFT는 일반화에 해롭다</b>(Chu 2025). R1 콜드스타트 성공과의 차이 = 데이터 다양성.</div></div>
+    <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--coral)"><div class="num" style="font-size:34px;color:var(--coral)">6.2</div><div style="font-size:14px;font-weight:700;margin-top:8px">콜드스타트 vs GRPO-only</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">ColdStart는 OOD 최저(0.84) + 암기 위험. <b>좁은·암기형 SFT는 일반화에 해롭다</b>(Chu et al. 2025 [3]). R1 콜드스타트 성공과의 차이 = 데이터 다양성.</div></div>
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--sky)"><div class="num" style="font-size:34px;color:var(--sky)">6.3</div><div style="font-size:14px;font-weight:700;margin-top:8px">시각 채널 무용성</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">편향 판단이 주로 텍스트로 이뤄짐 → 텍스트집중 1.0 &gt; 실이미지 0.9628. 단 “본질적 무정보”가 아니라 <b>본 파이프라인 속성</b>으로 한정.</div></div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>핵심:</b> 콜드스타트 SFT가 일반화의 적 · GRPO 향상은 노이즈 수준 · HardNeg의 기여는 “복잡도가 불필요함을 입증한 <b>방법론·검증 서사</b>”.</div></div>
@@ -536,8 +536,8 @@
   <div class="ttl"><div class="k">§8 UNSUCCESSFUL ATTEMPTS</div><h2>음성결과 — 정직하게 보고하는 실패의 기록</h2></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:30%;display:grid;grid-template-columns:1fr 1fr;gap:14px">
     <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">Sat-GRPO — 포화 분포 GRPO</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">BBQ가 이미 포화 → 보상 분산≈0 → gradient 소실 → 향상 0. “포화된 분포엔 RL 신호가 없다.”</div></div></div>
-    <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">ColdStart — 콜드스타트 SFT</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">BBQ 암기 콜드스타트 → OOD 최저(0.84). 일반화 이득 없이 암기 위험만 추가. Chu 2025 예측대로.</div></div></div>
-    <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">Robust-A/B — 강건성 GRPO</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">보상 5·6종 + 셔플짝 + 동적샘플링의 추가 복잡도가 <b>목표 지표(셔플)에서조차</b> HardNeg를 못 이김.</div></div></div>
+    <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">ColdStart — 콜드스타트 SFT</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">BBQ 암기 콜드스타트 → OOD 최저(0.84). 일반화 이득 없이 암기 위험만 추가. Chu et al. 2025 [3] 예측대로.</div></div></div>
+    <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">Robust-A/B — 강건성 GRPO</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">보상 5·6종 + 셔플짝 + 동적샘플링 [4]의 추가 복잡도가 <b>목표 지표(셔플)에서조차</b> HardNeg를 못 이김.</div></div></div>
     <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">추론형 · 신경망 보상모델</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">추론형(Explore-3)은 1.65s로 속도 위반 폐기. PRM/MCTS는 reward hacking·비용으로 기각.</div></div></div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:13px 18px"><div class="body" style="font-size:11.5px;line-height:1.6">음성결과는 버린 데이터가 아니라 <b>“복잡도가 이 8B 과제에서 이득을 못 낸다”</b>는 주장을 떠받치는 핵심 증거다. R1의 동명 섹션(Unsuccessful Attempts) 정신을 따른다.</div></div>
@@ -593,7 +593,56 @@
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>29</span></div>
 </section>
 
-<!-- 30 CLOSING -->
+<!-- 30 APPENDIX A: W&B TRAINING LOGS -->
+<section class="slide">
+  <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span>OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span class="on">APPENDIX</span></div><div class="navicon">↻ &nbsp;≡</div></div>
+  <div class="ttl"><div class="k">APPENDIX A · TRAINING LOGS (W&amp;B)</div><h2>학습 로그 실측 — v4 SFT → v6 GRPO</h2></div>
+  <div style="position:absolute;left:2.2%;right:2.2%;top:28%;display:flex;gap:2%">
+    <div class="card" style="flex:1;padding:16px 20px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">① v4 SFT — train/loss</div><div class="muted en" style="font-size:9.5px">sft-v4-unsloth-qwen3vl · Finished</div></div>
+      <svg width="100%" height="180" viewBox="0 0 400 200" style="margin-top:8px">
+        <line x1="34" y1="180" x2="396" y2="180" stroke="#C7D0DD" stroke-width="0.75"/>
+        <text x="8" y="24" font-family="Inter" font-size="9" fill="#7B7B7B">4</text><text x="8" y="104" font-family="Inter" font-size="9" fill="#7B7B7B">2</text><text x="8" y="183" font-family="Inter" font-size="9" fill="#7B7B7B">0</text>
+        <polyline points="38,18 44,48 52,90 64,126 82,152 116,167 170,172 260,173 396,174" fill="none" stroke="#03C75A" stroke-width="2"/>
+        <text x="280" y="196" font-family="Inter" font-size="9" fill="#7B7B7B">train/global_step → 10k</text>
+      </svg>
+      <div class="muted" style="font-size:10.5px;line-height:1.5">3 epochs · ~10,000 steps · lr 2e-4 cosine · loss <b>4.3 → 0.15</b> 수렴</div>
+    </div>
+    <div class="card" style="flex:1;padding:16px 20px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">② v6 GRPO — reward_accuracy/mean</div><div class="muted en" style="font-size:9.5px">grpo-v6-hardneg · Finished</div></div>
+      <svg width="100%" height="180" viewBox="0 0 400 200" style="margin-top:8px">
+        <line x1="34" y1="180" x2="396" y2="180" stroke="#C7D0DD" stroke-width="0.75"/>
+        <text x="6" y="52" font-family="Inter" font-size="9" fill="#7B7B7B">0.8</text><text x="6" y="118" font-family="Inter" font-size="9" fill="#7B7B7B">0.4</text><text x="12" y="183" font-family="Inter" font-size="9" fill="#7B7B7B">0</text>
+        <polyline points="40,88 60,116 78,68 96,107 114,49 132,125 150,79 168,97 186,58 206,116 224,68 242,88 260,107 278,49 296,97 314,79 332,68 350,107 368,58 392,88" fill="none" stroke="#03C75A" stroke-width="1.5"/>
+        <text x="280" y="196" font-family="Inter" font-size="9" fill="#7B7B7B">train/global_step → 400</text>
+      </svg>
+      <div class="muted" style="font-size:10.5px;line-height:1.5">400 steps · G=4 · 정확도 보상 0.2~0.85 활발히 진동</div>
+    </div>
+  </div>
+  <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:13px 18px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>핵심 증거:</b> v6 GRPO의 <b>보상 표준편차(reward_std ≈ 0.6)가 학습 내내 유지</b>됩니다 — 하드네거티브 풀이 reward 신호를 살려둬 정책이 실제로 갱신됨. 포화 분포로 학습한 Sat-GRPO(v5)는 분산≈0으로 신호가 죽어 효과가 0이었습니다.</div></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>30</span></div>
+</section>
+
+<!-- 31 APPENDIX B: v4~v8b COMPARISON -->
+<section class="slide">
+  <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span>OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span class="on">APPENDIX</span></div><div class="navicon">↻ &nbsp;≡</div></div>
+  <div class="ttl"><div class="k">APPENDIX B · FULL COMPARISON</div><h2>v4 → v8b 전체 비교 — 복잡도는 늘었지만 이득은 없었다</h2></div>
+  <div style="position:absolute;left:2.2%;right:2.2%;top:27%">
+    <table class="dt" style="font-size:11px">
+      <tr><th>모델 (코드)</th><th>학습 방식</th><th>balanced</th><th>OOD</th><th>셔플 일관성</th><th>판정</th></tr>
+      <tr><td>SFT <span class="muted">(v4)</span></td><td>단일토큰 SFT</td><td>1.0</td><td>기반</td><td>기반</td><td>기준선</td></tr>
+      <tr><td>Sat-GRPO <span class="muted">(v5)</span></td><td>+ GRPO · 포화 분포</td><td>1.0</td><td>≈기반</td><td>≈기반</td><td style="color:#FF6A4A;font-weight:600">효과 0 (음성)</td></tr>
+      <tr style="background:#F4FBF6"><td class="hi">HardNeg <span style="color:#9fd9b5">(v6)</span> ★</td><td class="hi">+ GRPO · 하드네거티브</td><td class="hi">1.0</td><td class="hi">0.855</td><td class="hi">0.9544</td><td class="hi">★ PASS · 최종</td></tr>
+      <tr><td>ColdStart <span class="muted">(v7)</span></td><td>콜드스타트 + 추론 GRPO</td><td>1.0</td><td>0.84</td><td>0.951</td><td style="color:#FF6A4A;font-weight:600">FAIL (음성)</td></tr>
+      <tr><td>Robust-A <span class="muted">(v8a)</span></td><td>강건성 GRPO (rank 32)</td><td>1.0</td><td>0.852</td><td>0.9544</td><td style="color:#FF6A4A;font-weight:600">OOD↑ 셔플↓ (음성)</td></tr>
+      <tr><td>Robust-B <span class="muted">(v8b)</span></td><td>강건성 GRPO (rank 16)</td><td>1.0</td><td>0.852</td><td>0.9522</td><td style="color:#FF6A4A;font-weight:600">PASS이나 무이득</td></tr>
+    </table>
+  </div>
+  <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>한눈에:</b> 모든 파인튜닝 모델이 balanced 1.0으로 포화. v5(포화)·v7(콜드스타트)·v8a/v8b(강건성)의 추가 복잡도는 <b>HardNeg(v6)를 유의하게 넘지 못함</b> — 격차는 ~2–3문항(단일시드 노이즈). 동급이면 가장 단순한 <b class="green">HardNeg(v6)</b>를 택한다(Occam).</div></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>31</span></div>
+</section>
+
+<!-- 32 CLOSING -->
 <section class="slide">
   <div style="position:absolute;top:0;left:0;width:100%;height:56%;background:radial-gradient(80% 120% at 30% 20%,var(--green) 0%,var(--green-mid) 55%,var(--green-edge) 100%)"></div>
   <div class="nav"><span class="wm" style="color:#fff">pk42ac</span><div class="tabs"><span class="on" style="color:#fff;border-color:#fff">THANK YOU</span></div><div class="navicon" style="color:#fff">↻ &nbsp;≡</div></div>
@@ -605,7 +654,26 @@
     <div class="card" style="flex:1;padding:16px"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">그럼 무엇을 택하나?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px">동급이면 가장 단순한 HardNeg-GRPO — Occam의 보수적 선택.</div></div>
     <div class="card" style="flex:1;padding:16px;border-top:3px solid var(--green)"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">최종 제출은?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px"><b class="green">HardNeg-GRPO</b> · 텍스트집중 1.0 / 실이미지 0.9628.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>30</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>32</span></div>
+</section>
+
+<!-- 33 REFERENCES -->
+<section class="slide">
+  <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">REFERENCES</span></div><div class="navicon">↻ &nbsp;≡</div></div>
+  <div class="ttl"><div class="k">REFERENCES</div><h2>참고문헌</h2></div>
+  <div style="position:absolute;left:2.2%;right:2.2%;top:26%">
+    <div class="body" style="display:flex;flex-direction:column;gap:10px;font-size:11.5px;line-height:1.6">
+      <div>[1]&nbsp; Guo, D., Yang, D., Zhang, H., <i>et al.</i> (DeepSeek-AI). <b>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.</b> arXiv:2501.12948, 2025. <span class="muted">— 논문 구조 · R1-Zero · 콜드스타트 · Unsuccessful Attempts 대응</span></div>
+      <div>[2]&nbsp; Shao, Z., Wang, P., Zhu, Q., <i>et al.</i> <b>DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models.</b> arXiv:2402.03300, 2024. <span class="muted">— GRPO 알고리즘 출처</span></div>
+      <div>[3]&nbsp; Chu, T., Zhai, Y., Yang, J., <i>et al.</i> <b>SFT Memorizes, RL Generalizes: A Comparative Study of Foundation Model Post-training.</b> ICML 2025; arXiv:2501.17161. <span class="muted">— 콜드스타트 SFT의 일반화 손실 근거</span></div>
+      <div>[4]&nbsp; Yu, Q., Zhang, Z., Zhu, R., <i>et al.</i> (ByteDance Seed). <b>DAPO: An Open-Source LLM Reinforcement Learning System at Scale.</b> arXiv:2503.14476, 2025. <span class="muted">— 동적 샘플링 근거</span></div>
+      <div>[5]&nbsp; Parrish, A., Chen, A., Nangia, N., <i>et al.</i> <b>BBQ: A Hand-Built Bias Benchmark for Question Answering.</b> Findings of ACL 2022; arXiv:2110.08193. <span class="muted">— 과제 · 편향점수(s<sub>AMB</sub>/s<sub>DIS</sub>) 정의</span></div>
+      <div>[6]&nbsp; Wu, X., Nian, J., Wei, T.-R., <i>et al.</i> <b>Does Reasoning Introduce Bias? A Study of Social Bias Evaluation and Mitigation in LLM Reasoning.</b> arXiv:2502.15361, 2025. <span class="muted">— 추론 도입이 편향을 키울 수 있음</span></div>
+      <div>[7]&nbsp; Qwen Team. <b>Qwen3-VL Technical Report.</b> arXiv:2511.21631, 2025. <span class="muted">— base 모델 (Qwen3-VL-8B-Instruct, Apache-2.0)</span></div>
+    </div>
+  </div>
+  <div class="muted" style="position:absolute;left:2.2%;bottom:8%;font-size:10.5px">소프트웨어 도구: Unsloth (FastVisionModel) · TRL (GRPOTrainer) · vLLM (고속 추론)</div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>33</span></div>
 </section>
 
 </body>
