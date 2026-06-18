@@ -1,0 +1,57 @@
+### LLaMA-Factory — Qwen2.5-VL LoRA SFT (추론형 <think> 학습)
+### 실행: llamafactory-cli train train/llamafactory/qwen25vl_lora_sft.yaml
+### 참고 인자: https://llamafactory.readthedocs.io/en/latest/advanced/arguments.html
+
+### model
+model_name_or_path: Qwen/Qwen2.5-VL-7B-Instruct   # 6/1 이전 공개 확인 필수
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 32
+lora_alpha: 64
+lora_target: all
+# deepspeed: examples/deepspeed/ds_z2_config.json   # 멀티GPU 시
+
+### dataset (멀티모달 sharegpt + images)
+dataset: bbq_reasoning              # data/dataset_info.json 에 정의 (make_bbq_data.py 생성)
+dataset_dir: data                   # dataset_info.json + bbq_train.json 위치
+template: qwen2_vl                   # 확인됨: Qwen2.5-VL용 템플릿 = qwen2_vl (별도 qwen2_5_vl 없음)
+cutoff_len: 4096
+max_samples: 100000
+overwrite_cache: true
+preprocessing_num_workers: 16
+dataloader_num_workers: 4
+### 멀티모달 이미지 토큰/해상도 — 속도·VRAM 직결 (0.5초 예산 위해 과대 금지)
+image_max_pixels: 262144            # 512*512 상당. 너무 크면 추론 느려짐
+# image_min_pixels: 50176
+
+### output
+output_dir: outputs/sft_qwen25vl_lora
+logging_steps: 5
+save_steps: 200
+plot_loss: true
+overwrite_output_dir: true
+save_only_model: false
+report_to: wandb                    # 본인 W&B로 로그 전송 (WANDB_API_KEY env)
+run_name: bias-sft-qwen25vl
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 8
+learning_rate: 5.0e-5
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+seed: 42
+optim: adamw_torch_fused
+
+### acceleration (H100 권장)
+flash_attn: fa2
+# enable_liger_kernel: true         # 텍스트엔 좋으나 VLM 호환 확인 후
+
+### eval
+val_size: 0.05

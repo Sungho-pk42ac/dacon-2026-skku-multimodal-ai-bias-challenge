@@ -1,0 +1,26 @@
+# ============================================================
+# 2026 성균관대 멀티모달 AI Bias 챌린지 — 의존성 (2차 제출용)
+# 기준 평가환경: RTX A6000 48GB / Python 3.10 / CUDA 12.4 / PyTorch 2.6.0 / Ubuntu 20.04
+# (개발은 Python 3.11에서 진행. 추론 코드는 Python 3.10 기준환경에서 실행 가능.)
+# ============================================================
+
+# ---- [추론] inference/ — 오프라인, 외부 API 호출 0 (제출 채점용) ----
+torch==2.6.0                 # CUDA 12.4 빌드: --index-url https://download.pytorch.org/whl/cu124
+torchvision==0.21.0
+transformers==5.6.0          # Qwen3-VL 지원에 필요(>=4.57). torch 2.6 호환 확인됨
+accelerate==1.6.0
+qwen-vl-utils==0.0.14        # Qwen-VL 이미지 전처리
+pillow==11.3.0
+pandas==2.3.3
+
+# ---- [학습] train/ — LLaMA-Factory QLoRA SFT. 추론과 분리(별도 환경 권장) ----
+# Python 3.11 권장. LLaMA-Factory는 소스 설치:
+#   git clone https://github.com/hiyouga/LLaMA-Factory && pip install -e LLaMA-Factory
+peft==0.18.1
+datasets==4.0.0
+
+# ---- [강화학습, 선택] train/grpo/ — TRL GRPO (별도 venv) ----
+trl==1.6.0                   # GRPO + Qwen3-VL 동시 지원 확인됨 (transformers 5.6 호환)
+
+# ---- [데이터 생성, 선택] data_build/ — 학습 데이터 구성 시에만 (추론과 무관) ----
+# openai>=1.0   # 진짜 CoT 합성용(v2/v3 계열). v4는 미사용. 추론 단계에선 절대 호출 안 함.
