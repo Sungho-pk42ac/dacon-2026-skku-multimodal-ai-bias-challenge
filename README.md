@@ -19,7 +19,7 @@
 
 <br>
 
-## 💡 핵심 주장 — 정교함이 아니라 단순함이 이겼다
+## 💡 핵심 주장 — 복잡도는 이득을 더하지 못했다 (동급이면 단순함)
 
 > **콜드스타트 SFT 없이 GRPO만으로** 편향을 제거하면서 일반화를 보존할 수 있다.
 > 그리고 — 더 복잡한 RL 변형들은 8B에서 이 단순한 모델을 **유의하게 넘지 못했다.**
@@ -57,7 +57,7 @@ Qwen3-VL-8B-Instruct  →  ① 단일토큰 SFT  →  ② 하드네거티브 GRP
 | 검증 항목 | 결과 |
 |---|---|
 | 텍스트집중 balanced accuracy | **1.0 재현** (공개 BBQ held-out) |
-| **실이미지 제출 (DACON test)** | 기존 0.9628 제출과 **예측 99.5% 일치** → *오차 범위 내 복원* ✅ |
+| **실이미지 제출 (DACON test)** | 기존 0.9628 제출과 **예측 99.29% 일치** → *오차 범위 내 복원* ✅ |
 | 학습 코드 (Unsloth + Qwen3-VL) | SFT 정상 시작·학습 ✅ |
 | 추론 속도 | ~0.22s/샘플 (A6000, 0.5s 예산 내) ✅ |
 
@@ -89,6 +89,7 @@ python train/unsloth/grpo_hard_v6.py --base outputs/merged_v4 --out outputs/merg
 
 | 경로 | 내용 |
 |---|---|
+| [`experiments/`](experiments/) | **실험(v4~v8b)별 인덱스** — 버전마다 코드·데이터·학습명령·결과·판정 카드 |
 | `prompts.py` | 프롬프트·기권 패턴·`text_to_label` 파서 (학습·추론 공통) |
 | `data_build/` | 외부데이터(공개 QA) 생성·누출제거 — `make_bbq_clean.py` · `mine_hard.py` |
 | `train/unsloth/` | 학습 — `sft_unsloth.py`(SFT) · **`grpo_hard_v6.py`(최종 GRPO)** · v5/v7/v8 변형(ablation) |
@@ -101,6 +102,7 @@ python train/unsloth/grpo_hard_v6.py --base outputs/merged_v4 --out outputs/merg
 
 ## 📑 더 보기
 
+- **🧪 실험 인덱스 (v4~v8b)** — [`experiments/`](experiments/README.md) · 버전별 코드·결과 한눈에
 - **논문 + 재현 코드 번들** — [`submission/V6_SUBMISSION_BUNDLE.md`](submission/V6_SUBMISSION_BUNDLE.md)
 - **발표자료 (PDF, 34p)** — [`submission/발표자료_pk42ac.pdf`](submission/발표자료_pk42ac.pdf)
 - **전체 비교(v4~v8b)** — [`docs/V4_V8B_COMPLETE_COMPARISON.md`](docs/V4_V8B_COMPLETE_COMPARISON.md)
