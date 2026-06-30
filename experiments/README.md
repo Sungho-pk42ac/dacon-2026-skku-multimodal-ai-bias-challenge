@@ -87,3 +87,6 @@ HF 네임스페이스: `psh3333/dacon-skku-bias-vlm-{v4-unsloth,v5-unsloth,v6,v7
 - 최종 모델 선택 근거: [`docs/FINAL_MODEL_SELECTION.md`](../docs/FINAL_MODEL_SELECTION.md)
 - 재현성 검증(RTX A6000): [`submission/REPRODUCIBILITY_검증.md`](../submission/REPRODUCIBILITY_검증.md)
 - DACON 점수: [`docs/DACON_SCORES.md`](../docs/DACON_SCORES.md)
+
+## 다중시드 검증 (단일시드 한계 해소)
+- **[v6-multiseed](v6-multiseed.md)** — 3-시드(42/123/2024) 재학습: v6 ood2 = **0.708±0.0035**, GRPO의 OOD 향상은 시드 노이즈 내(유의차 없음) · 원자료 [multiseed_ood2_results.txt](multiseed_ood2_results.txt)
