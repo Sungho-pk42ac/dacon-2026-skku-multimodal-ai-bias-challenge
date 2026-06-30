@@ -1,0 +1,13 @@
+# 검증된 학습(unsloth) 환경 lock — RunPod RTX A6000, 2026-06-30 실측 (pip freeze)
+# 설치: pip install unsloth vllm  → 아래 조합으로 자동 해결됨(전체 파이프라인 SFT→mine→GRPO 무에러 실행 확인).
+# ※ 학습 env는 추론/채점 env(torch 2.6.0+cu124)와 별도. 학습 재현은 GRPO 샘플링으로 비트동일 아님(정상).
+torch==2.10.0
+torchvision==0.25.0
+torchao==0.17.0
+transformers==4.57.6
+trl==0.24.0
+peft==0.19.1
+vllm==0.19.1
+unsloth==2026.6.9
+unsloth_zoo==2026.6.7
+wandb        # report_to="wandb" 콜백 존재용(WANDB_MODE=disabled로 비활성 가능)

@@ -26,8 +26,10 @@ vllm                         # GRPO fast_inference 백엔드 — 필수
 trl                          # GRPOTrainer / SFTTrainer (unsloth가 호환 버전 동반 설치)
 peft==0.18.1
 datasets==4.0.0
-# ※ unsloth/vllm/trl/transformers 의 학습환경 정확한 핀은 학습 pod의 `pip freeze` 기준입니다.
-#    (추론=Private Score 복원은 위 [추론] 섹션만으로 자기완결적이며, 본 학습 섹션과 무관합니다.)
+# ※ 학습 스택은 `pip install unsloth vllm` 로 일괄 설치하면 호환 버전이 자동 해결됩니다.
+#    2026-06-30 RTX A6000에서 전체 파이프라인(데이터→SFT→하드네거티브 채굴→GRPO→병합)을 **무에러 실행 검증 완료**.
+#    검증-실행 스택 lock: `requirements_train_lock.txt` (torch2.10.0+cu128·tf4.57.6·trl0.24.0·peft0.19.1·vllm0.19.1·unsloth2026.6.9) · 상세 ../REPRODUCIBILITY_검증.md §5.
+#    (추론=Private Score 복원은 위 [추론] 섹션만으로 자기완결적이며 본 학습 섹션과 무관.)
 
 # ---- [학습 · 대체/레거시 경로] train/llamafactory/ — LLaMA-Factory QLoRA SFT (선택) ----
 # train/llamafactory/*.yaml 사용 시: LLaMA-Factory를 소스 설치

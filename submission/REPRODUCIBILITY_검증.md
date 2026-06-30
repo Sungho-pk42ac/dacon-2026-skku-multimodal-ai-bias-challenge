@@ -38,7 +38,21 @@
 - 위에서 입증된 **모델 로드·greedy 결정성·파이프라인 무에러**는 입력 이미지 종류와 무관한 코드·모델 속성입니다.
 - 따라서 **실제 테스트 이미지 + `--max_pixels 262144`** 로 §0의 공식 명령을 실행하면 동일한 결정성으로 **`submission_v6_final.csv`(0.9628)** 가 복원됩니다. (본 검증 환경엔 테스트 이미지를 두지 않아 실이미지 점수 자체는 미실행 — 운영진의 Hidden 평가가 실이미지로 수행되는 부분.)
 
-## 5. 한계 (정직 고지)
+## 5. 전체 학습 파이프라인 무에러 실행 검증 (2026-06-30, A6000)
+**추론뿐 아니라 학습 코드 전부를 실제 GPU에서 실행**해 "모든 코드 오류 없이 실행"(요건 1-양식②)을 전 구간 입증했습니다.
+
+| 단계 | 스크립트 | 결과 |
+|---|---|---|
+| 1 데이터 생성 | `data_build/make_bbq_clean.py` | ✅ TRAIN 57,094 · **시나리오 누출 0** · 라벨위치 균등 |
+| 2 SFT | `train/unsloth/sft_unsloth.py` (`--max_steps 15`) | ✅ 학습 + 16bit 병합 저장 (`SFT_DONE`) |
+| 3 하드네거티브 채굴 | `data_build/mine_hard.py` | ✅ v4-오답 하드네거티브 + BBQ 앵커 풀 생성 (`MINE_HARD_DONE`) |
+| 4 GRPO | `train/unsloth/grpo_hard_v6.py` (`--steps 5`) | ✅ vLLM fast_inference + 보상 2종 + GRPO 업데이트 + 병합 (`GRPO_V6_DONE`) |
+| 5 추론 | `inference/make_submission.py` | ✅ (§1–3: 결정성 100% · 텍스트집중 제출본 99.29% 일치) |
+
+- **학습 환경(unsloth, 검증-실행 스택):** torch 2.10.0+cu128 · transformers 4.57.6 · trl 0.24.0 · peft 0.19.1 · torchao 0.17.0 · vllm 0.19.1 · unsloth 2026.6.9 (전체 lock: `code/requirements_train_lock.txt`). 설치 `pip install unsloth vllm`로 자동 해결됨. (학습 env는 추론/채점 env(torch 2.6.0+cu124)와 분리.)
+- **외부데이터 재생성 검증:** `make_bbq_clean.py`가 공개 BBQ(`walledai/BBQ`)에서 `bbq_v4_train.json`(57,094)·`val_ids.json`을 결정론적(seed 42)으로 재생성함을 실측 확인 → 외부데이터는 공개셋 + 스크립트로 완전 재현됨.
+
+## 6. 한계 (정직 고지)
 - **학습(SFT→GRPO) 재현**은 GRPO 샘플링 특성상 비트동일이 아님(정상). **Private/Hidden 평가는 고정 공개 가중치 + 추론**으로 수행하며 재학습 불필요.
 - 위 실측은 단일 GPU(A6000)·단일 환경 기준. 다른 GPU/라이브러리에서는 bf16 수치 말단 차이로 극소수 경계 샘플이 달라질 수 있으나(greedy+높은 마진), **오차 범위 내**입니다.
 
