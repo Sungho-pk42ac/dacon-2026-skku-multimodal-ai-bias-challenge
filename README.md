@@ -102,7 +102,7 @@ python train/unsloth/grpo_hard_v6.py --base outputs/merged_v4 --out outputs/merg
 ## 📑 더 보기
 
 - **논문 + 재현 코드 번들** — [`submission/V6_SUBMISSION_BUNDLE.md`](submission/V6_SUBMISSION_BUNDLE.md)
-- **발표자료 (PDF, 33p)** — [`submission/발표자료_v6_naver-award.pdf`](submission/)
+- **발표자료 (PDF, 34p)** — [`submission/발표자료_pk42ac.pdf`](submission/발표자료_pk42ac.pdf)
 - **전체 비교(v4~v8b)** — [`docs/V4_V8B_COMPLETE_COMPARISON.md`](docs/V4_V8B_COMPLETE_COMPARISON.md)
 
 <div align="center">

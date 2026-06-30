@@ -33,3 +33,8 @@ notebooks/
 # pod 접속 헬퍼(휘발성)
 infra/pod.sh
 infra/pod_push.sh
+
+# 2차 제출물 — 개인정보/대용량 (공개 레포에 커밋 금지)
+submission/참가자격증빙/
+제출메일_pk42ac.txt
+데이콘_2차평가산출물.zip

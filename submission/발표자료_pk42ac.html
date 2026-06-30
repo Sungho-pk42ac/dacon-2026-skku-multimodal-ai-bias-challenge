@@ -61,6 +61,7 @@
     <div class="muted" style="margin-top:8px;font-size:13.5px;line-height:1.7">복잡도가 이득을 못 내는 8B RLVR의 한계에 대한 음성결과 기반 연구<br>base: Qwen3-VL-8B-Instruct[7] (Apache-2.0) · 최종 제출 모델 <b class="green">HardNeg-GRPO</b></div>
   </div>
   <div style="position:absolute;left:5%;bottom:8%"><div class="en" style="font-weight:800;font-size:32px;letter-spacing:-1px">TEAM <span class="green">pk42ac</span></div><div class="muted" style="font-size:13px;margin-top:6px">박성호 · 2026.06</div></div>
+  <div class="en" style="position:absolute;left:5%;bottom:3%;font-size:10.5px;color:var(--sub);letter-spacing:.2px">코드·실험 <b style="color:var(--ink)">github.com/Sungho-pk42ac/dacon-2026-skku-multimodal-ai-bias-challenge</b> &nbsp;·&nbsp; 모델 <b style="color:var(--ink)">huggingface.co/psh3333/dacon-skku-bias-vlm-v6</b></div>
 </section>
 
 <!-- 02 CONTENTS -->
@@ -68,13 +69,33 @@
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
   <div style="position:absolute;left:2.2%;top:11%"><span class="h1en" style="font-size:34px">CONTENTS</span></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:25%;display:flex;gap:1.5%">
-    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">01 OVERVIEW</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.03–09</span><br>배경 · 동기<br>Abstract<br>과제 · 기여<br>Related Work<br>계보 · 사양</div></div>
-    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">02 METHOD</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.10–18</span><br>왜 GRPO인가<br>알고리즘 · 보상<br>학습데이터 설계<br>강건성·일반화<br>재현 절차</div></div>
-    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">03 RESULTS</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.19–23</span><br>복잡도 기각<br>인분포 결과<br>독립 일반화<br>DACON 채점</div></div>
-    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">04 DISCUSSION</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.24–27</span><br>논의 3가지<br>최종 모델 선택<br>음성결과<br>한계</div></div>
-    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">05 CLOSING</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.28–33</span><br>Future Work · 결론<br>학습로그 · 비교표<br>References</div></div>
+    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">01 OVERVIEW</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.03–10</span><br>30초 요약 · 용어<br>배경 · 동기<br>Abstract<br>과제 · 기여<br>Related Work<br>계보 · 사양</div></div>
+    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">02 METHOD</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.11–19</span><br>왜 GRPO인가<br>알고리즘 · 보상<br>학습데이터 설계<br>강건성·일반화<br>재현 절차</div></div>
+    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">03 RESULTS</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.20–24</span><br>복잡도 기각<br>인분포 결과<br>독립 일반화<br>DACON 채점</div></div>
+    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">04 DISCUSSION</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.25–28</span><br>논의 3가지<br>최종 모델 선택<br>음성결과<br>한계</div></div>
+    <div style="flex:1"><div class="en bold green" style="font-size:13px;border-top:2px solid var(--green);padding-top:10px">05 CLOSING</div><div class="body" style="margin-top:12px;font-size:11px;line-height:1.95"><span class="muted en" style="font-size:10px">P.29–34</span><br>Future Work · 결론<br>학습로그 · 비교표<br>References</div></div>
   </div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>02</span></div>
+</section>
+
+<!-- 02b GLOSSARY (쉬운 요약) -->
+<section class="slide">
+  <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
+  <div class="ttl"><div class="k">30-SECOND SUMMARY &amp; KEY TERMS</div><h2>30초 요약과 핵심 용어 — 이 5개만 알면 끝까지 편합니다</h2></div>
+  <div style="position:absolute;left:2.2%;top:30%;width:38%">
+    <div class="gcard" style="padding:18px 20px">
+      <div class="kicker" style="margin-bottom:10px">30초 요약</div>
+      <div class="body" style="font-size:12.5px;line-height:1.9">AI가 이미지 속 사람을 <b>성별·인종 같은 고정관념</b>으로 판단하지 않게 만드는 게 목표입니다.<br><br>우리는 <b class="green">가장 단순한 방법(GRPO 하나)</b>만으로 편향을 없앨고, 더 복잡한 방법을 4가지나 시도했지만 <b>이보다 더 나아지지 않았습니다.</b><br><br>그래서 결론은 — <b>“정교함이 아니라 단순함이 이겼다.”</b></div>
+    </div>
+  </div>
+  <div style="position:absolute;right:2.2%;top:30%;width:55%;display:flex;flex-direction:column;gap:9px">
+    <div class="card" style="padding:11px 16px;border-left:3px solid var(--green)"><b>GRPO</b> <span class="muted" style="font-size:11px">— 한 문제에 답을 여러 개 내보고, 그중 잘한 답 쪽으로 스스로 학습하는 강화학습. 따로 채점용 모델이 필요 없어 가볍다.</span></div>
+    <div class="card" style="padding:11px 16px;border-left:3px solid var(--sky)"><b>하드네거티브</b> <span class="muted" style="font-size:11px">— 모델이 <b>자주 틀리는 어려운 문제</b>만 골라 가르치는 것. 다 맞히는 쉬운 문제만 주면 배울 게 없다.</span></div>
+    <div class="card" style="padding:11px 16px;border-left:3px solid var(--purple)"><b>OOD · 독립셋</b> <span class="muted" style="font-size:11px">— 학습에 <b>한 번도 안 쓴 새로운 문제</b>. 외운 게 아니라 진짜 실력(일반화)이 있는지 본다.</span></div>
+    <div class="card" style="padding:11px 16px;border-left:3px solid var(--mint)"><b>ablation (제거 실험)</b> <span class="muted" style="font-size:11px">— 요소를 <b>하나씩 빼 보며</b> “무엇이 진짜 효과의 원인인지”를 가려내는 실험.</span></div>
+    <div class="card" style="padding:11px 16px;border-left:3px solid var(--coral)"><b>Balanced Accuracy</b> <span class="muted" style="font-size:11px">— <b>답해야 할 문제</b>와 <b>기권해야 할 문제</b>를 따로 채점해 평균. 한쪽만 잘하면 점수가 낮다.</span></div>
+  </div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>03</span></div>
 </section>
 
 <!-- 03 MOTIVATION -->
@@ -91,7 +112,7 @@
     <div class="card" style="padding:16px 18px;border-left:3px solid var(--sky);margin-top:12px"><div style="font-size:13px;font-weight:700">Disambiguated (근거 명확)</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px">본문에 근거가 있음 → <b>그 근거가 가리키는 답</b>을. 과도한 기권도 오답.</div></div>
     <div class="muted" style="font-size:10.5px;margin-top:14px;line-height:1.6">두 유형을 균형 있게 평가하기 위해 <b>Balanced Accuracy</b>를 사용.</div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>03</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>04</span></div>
 </section>
 
 <!-- 04 ABSTRACT -->
@@ -103,7 +124,7 @@
     <div style="display:flex;gap:12px;margin-bottom:14px"><span class="num green" style="font-size:30px">01</span><div class="body" style="font-size:11.5px">콜드스타트 SFT가 일반화의 적. RL 단독은 일반화를 해치지 않는다.</div></div>
     <div style="display:flex;gap:12px;margin-bottom:14px"><span class="num green" style="font-size:30px">02</span><div class="body" style="font-size:11.5px">GRPO 향상폭은 노이즈 수준. base 잠재능력 한계 내.</div></div>
     <div style="display:flex;gap:12px"><span class="num green" style="font-size:30px">03</span><div class="body" style="font-size:11.5px">기여는 점수가 아니라 <b>방법론·검증 서사</b>. 동급이면 가장 단순한 모델.</div></div></div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>04</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>05</span></div>
 </section>
 
 <!-- 05 TASK & METRIC -->
@@ -123,7 +144,7 @@
       <div class="card" style="flex:1;padding:14px;text-align:center;border-top:3px solid var(--green)"><div class="num green" style="font-size:30px">목표</div><div class="muted" style="font-size:10.5px;margin-top:6px">근거↔기권을<br>구분하는 정책</div></div>
     </div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>05</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>06</span></div>
 </section>
 
 <!-- 06 CONTRIBUTIONS -->
@@ -137,7 +158,7 @@
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--mint);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--mint)">4</span><div class="body" style="font-size:12.5px"><b>두 추론 레짐 ablation</b> — 실이미지(0.9628) &lt; 텍스트집중(1.0). 시각 채널의 기여를 실제 채점으로 측정·보고.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--coral);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--coral)">5</span><div class="body" style="font-size:12.5px"><b>규칙기반 outcome 보상만 사용</b>(신경망 보상모델 X) — reward hacking·비용 회피.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>06</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>07</span></div>
 </section>
 
 <!-- 07 RELATED WORK -->
@@ -152,7 +173,7 @@
     <div class="card" style="padding:13px 16px"><div style="font-size:12.5px;font-weight:700">[6] Does Reasoning Introduce Bias? <span class="muted en" style="font-size:10px">2502.15361</span></div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">추론 도입이 편향을 키울 수 있음. → <b>단일토큰 직답</b> 설계 근거.</div></div>
     <div class="card" style="padding:13px 16px;border-left:3px solid var(--green)"><div style="font-size:12.5px;font-weight:700">본 연구의 위치</div><div class="muted" style="font-size:10.5px;line-height:1.55;margin-top:5px">이들을 <b>8B 멀티모달 편향 과제</b>에 적용·검증하고, “복잡도 무이득”을 정직한 <b>음성결과</b>로 보고.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>07</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>08</span></div>
 </section>
 
 <!-- 08 LINEAGE -->
@@ -174,8 +195,8 @@
     <div style="flex:1"><div class="green en bold" style="font-size:11px">GRPO-ONLY</div><div class="body" style="margin-top:8px;font-size:11px;line-height:1.7"><b>Sat-GRPO</b> 포화 → 효과 0<br><b class="green">HardNeg-GRPO</b> 하드네거티브<br>balanced 1.0 · <b class="green">★ 최종</b></div></div>
     <div style="flex:1"><div class="muted en bold" style="font-size:11px">복잡도 검증 (음성결과)</div><div class="body" style="margin-top:8px;font-size:11px;line-height:1.7"><b>ColdStart</b> → OOD 최저<br><b>Robust-A</b> 보상 5종<br><b>Robust-B</b> 보상 6종 → 전부 패배</div></div>
   </div>
-  <div style="position:absolute;bottom:6.5%;left:2.2%;right:2.2%;font-family:'Inter';font-size:9.5px;color:var(--sub);border-top:1px solid var(--hair);padding-top:6px">* 코드·HF 식별자(재현성): Explore-1~3 = v1~v3 · SFT = v4 · Sat-GRPO = v5 · <b style="color:#03C75A">HardNeg-GRPO = v6</b> · ColdStart = v7 · Robust-A/B = v8a/v8b</div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>08</span></div>
+  <div style="position:absolute;bottom:6.5%;left:2.2%;right:2.2%;font-family:'Inter';font-size:9.5px;color:var(--sub);border-top:1px solid var(--hair);padding-top:6px">* 코드·HF 식별자(재현성): Explore-1~3 = v1~v3 · SFT = v4 · Sat-GRPO = v5 · <b style="color:#03C75A">HardNeg-GRPO = v6</b> · ColdStart = v7 · Robust-A/B = v8a/v8b &nbsp;|&nbsp; 전체 코드·실험 ▸ <b style="color:var(--ink)">github.com/Sungho-pk42ac/dacon-2026-skku-multimodal-ai-bias-challenge</b></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>09</span></div>
 </section>
 
 <!-- 09 VERSION SPECS -->
@@ -194,7 +215,7 @@
     </table>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:12px 18px"><div class="body" style="font-size:11.5px;line-height:1.6">공통: base = Qwen3-VL-8B-Instruct · Unsloth LoRA · 언어층 학습 / 비전층 동결 · 단일토큰(0/1/2) 출력(ColdStart 예외) · 데이터는 전부 독립 공개 QA(DACON 평가셋 비파생).</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>09</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>10</span></div>
 </section>
 
 <!-- 10 SECTION METHOD -->
@@ -204,8 +225,9 @@
   <div class="subtab"><span>Approach</span><span class="on">Method &amp; Reward</span><span>Results</span></div>
   <div style="position:absolute;top:38%;left:0;width:100%;text-align:center">
     <div class="h1en" style="font-size:84px;letter-spacing:-2px">Method &amp; Reward</div>
-    <div class="muted" style="font-size:15px;margin-top:18px;line-height:1.7">§3 — 왜 GRPO인가 · 보상 설계 · 학습 데이터로 강건성과 일반화를 잡는 법</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>10</span></div>
+    <div class="muted" style="font-size:15px;margin-top:18px;line-height:1.7">§3 — 왜 GRPO인가 · 보상 설계 · 학습 데이터로 강건성과 일반화를 잡는 법</div>
+    <div class="gcard" style="display:inline-block;text-align:left;max-width:780px;margin-top:26px;padding:16px 22px"><div class="body" style="font-size:12.5px;line-height:1.85"><b class="green">💡 쉽게 말하면</b> — 이 파트는 세 가지만 보면 됩니다. ① <b>왜 가장 단순한 방법(GRPO)을 골랐나</b>, ② <b>상·벌점(보상)을 어떻게 설계했나</b>, ③ <b>“어떤 데이터로 가르쳤나”가 결국 강건성과 일반화를 만들었다.</b></div></div></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>11</span></div>
 </section>
 
 <!-- 11 CORE MESSAGE hero -->
@@ -216,7 +238,7 @@
     <div style="font-size:25px;font-weight:700;line-height:1.45">콜드스타트 SFT 없이 <span class="green">GRPO만으로</span><br>편향을 제거하면서 일반화를 보존할 수 있다</div>
     <div class="muted" style="font-size:13px;margin-top:14px;line-height:1.6">DeepSeek-R1-Zero의 순수 RL과 동형 · 규칙기반 보상 2종 · 신경망 보상모델 없음</div></div>
   <div style="position:absolute;bottom:13%;left:0;width:100%;text-align:center;color:#fff"><div style="font-size:30px">⌄</div><div class="en" style="font-size:26px;font-weight:600;margin-top:2px">GRPO-only &nbsp;·&nbsp; HardNeg-GRPO</div></div>
-  <div class="footer" style="color:rgba(255,255,255,.85)"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>11</span></div>
+  <div class="footer" style="color:rgba(255,255,255,.85)"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>12</span></div>
 </section>
 
 <!-- 12 WHY GRPO -->
@@ -239,7 +261,7 @@
     </div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:8.5%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>그래서 설계:</b> 가벼운 단일토큰 SFT(형식만 학습) 위에 <b class="green">GRPO-only</b> — 콜드스타트 암기 없이(R1-Zero와 동형) base의 잠재능력을 <b>일반화 손실 없이</b> 실현한다.</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>12</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>13</span></div>
 </section>
 
 <!-- 13 GRPO ALGORITHM + REWARD -->
@@ -251,7 +273,7 @@
     <div class="kicker">GRPO [2] (Shao et al. 2024)</div>
     <div class="body" style="margin-top:10px;font-size:12px;line-height:1.75">한 프롬프트에 <b>G개 출력</b>을 샘플링하고, 그룹 내에서 보상을 정규화한 advantage로 정책을 갱신한다. 별도 value critic이 필요 없어 가볍다.</div>
     <div class="gcard" style="margin-top:14px;padding:18px 20px;text-align:center"><div class="en" style="font-size:22px;font-weight:600">A<sub>i</sub> = ( r<sub>i</sub> − mean(r) ) / std(r)</div><div class="muted" style="font-size:11px;margin-top:10px">+ KL 규제 · num_generations G=4</div></div>
-    <div class="body muted" style="margin-top:14px;font-size:11px;line-height:1.6">보상에 분산이 있어야 advantage가 0이 아니다 → <b>하드네거티브 데이터가 필수</b>(다음 장).</div>
+    <div class="body muted" style="margin-top:14px;font-size:11px;line-height:1.6">보상에 분산이 있어야 advantage가 0이 아니다 → <b>하드네거티브 데이터가 필수</b>(다음 장).<br><b class="green">💡</b> 4개 답의 점수가 다 같으면 배울 게 없으니, <b>틀릴 만한 문제</b>를 줘야 한다는 뜻.</div>
   </div>
   <div style="position:absolute;right:2.2%;top:30%;width:46%">
     <div class="kicker">규칙기반 보상 2종 (HardNeg)</div>
@@ -259,7 +281,7 @@
     <div class="card" style="margin-top:12px;padding:16px 18px;border-left:3px solid var(--green)"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:14px;font-weight:700">형식 보상 (format)</div><div class="muted" style="font-size:10.5px">단일토큰 0/1/2 유효(길이≤2)</div></div><div class="en"><span class="num green" style="font-size:30px">+0.5</span> <span class="muted">/ −1.0</span></div></div></div>
     <div class="gcard" style="margin-top:14px;padding:14px 16px"><div class="body" style="font-size:11.5px;line-height:1.65"><b>최종 라벨은 항상 모델 생성 텍스트 파싱</b> — 규칙기반 선택이 아님(대회 규칙 준수). 2종만으로 정답·형식을 동시에 겨냥.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>13</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>14</span></div>
 </section>
 
 <!-- 14 SINGLE-TOKEN + SATURATION -->
@@ -277,7 +299,7 @@
     <div class="body" style="margin-top:10px;font-size:12px;line-height:1.75">R1-Zero는 AIME 15.6→71.0%로 성장하지만, BBQ는 <b>이미 천장(1.0)</b>이라 끌어올릴 여지가 없다. 포화 분포 전체로 학습한 Sat-GRPO는 <b>보상 분산≈0 → 효과 0</b>이었다.</div>
     <div class="gcard" style="margin-top:14px;padding:14px 16px"><div class="body" style="font-size:11.5px;line-height:1.65"><b>HardNeg의 처방:</b> SFT가 <b>틀리는 문제만</b> 학습 → 모든 샘플이 오답 후보 → reward 신호가 살아 정책이 실제로 개선된다. 이것이 다음 장의 데이터 설계로 이어진다.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>14</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>15</span></div>
 </section>
 
 <!-- 15 DATA DESIGN I -->
@@ -311,7 +333,7 @@
       <text x="250" y="52" font-family="Inter" font-size="9" fill="#03C75A">0·1·2 균등 → 의미 학습</text>
     </svg>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>15</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>16</span></div>
 </section>
 
 <!-- 16 DATA DESIGN II -->
@@ -334,7 +356,7 @@
     </div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:14px 18px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>한 풀로 두 마리:</b> ‘오답만’이라 신호가 살고(①), ‘일반추론’이라 분포 밖으로 넓어지고(②), ‘기권 앵커’로 핵심 정책을 지킨다(③). <b>규칙 준수:</b> 전부 독립 공개 QA, DACON 평가셋 비파생.</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>16</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>17</span></div>
 </section>
 
 <!-- 17 ROBUSTNESS & GENERALIZATION → METRIC MAPPING -->
@@ -353,7 +375,7 @@
     </table>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:8.5%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>핵심:</b> 강건성·일반화는 우연이 아니라 <b>데이터 설계와 보상 설계로 의도적으로 겨냥</b>한 결과다. 그리고 두 종류의 held-out — 공개 v8_eval(인분포+혼합OOD)과 <b>완전 미관측 ood2</b>(MMLU/HellaSwag/ARC-C/WinoGrande) — 로 교차검증해 “암기가 아닌 일반화”임을 확인했다.</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>17</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>18</span></div>
 </section>
 
 <!-- 18 REPRODUCTION -->
@@ -388,7 +410,7 @@
       </g>
     </svg>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>18</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>19</span></div>
 </section>
 
 <!-- 19 SECTION RESULTS -->
@@ -396,8 +418,9 @@
   <div style="position:absolute;inset:0;background:radial-gradient(38% 52% at 50% 50%,var(--green-fade) 0%,var(--green-edge) 35%,rgba(91,223,146,.35) 60%,#fff 88%)"></div>
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span>OVERVIEW</span><span>METHOD</span><span class="on">RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
   <div class="subtab"><span>Method</span><span class="on">Results</span><span>Discussion</span></div>
-  <div style="position:absolute;top:42%;left:0;width:100%;text-align:center"><div class="h1en" style="font-size:92px;letter-spacing:-2px">Results</div><div class="muted" style="font-size:15px;margin-top:18px;line-height:1.6">§4–5 — 복잡도 기각 · 인분포/독립 일반화 · DACON 제출 채점</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>19</span></div>
+  <div style="position:absolute;top:42%;left:0;width:100%;text-align:center"><div class="h1en" style="font-size:92px;letter-spacing:-2px">Results</div><div class="muted" style="font-size:15px;margin-top:18px;line-height:1.6">§4–5 — 복잡도 기각 · 인분포/독립 일반화 · DACON 제출 채점</div>
+    <div class="gcard" style="display:inline-block;text-align:left;max-width:800px;margin-top:26px;padding:16px 22px"><div class="body" style="font-size:12.5px;line-height:1.85"><b class="green">💡 쉽게 말하면</b> — 결과는 세 줄입니다. ① 더 복잡한 방법 4개를 <b>모두 제쳤고</b>, ② 편향이 실제로 <b>0</b>이 됐으며, ③ <b>학습에 안 쓴 새 문제</b>에서도 점수가 올랐습니다(외운 게 아니라 진짜 실력).</div></div></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>20</span></div>
 </section>
 
 <!-- 20 WHY HARDNEG ablation -->
@@ -420,7 +443,7 @@
     <circle cx="338" cy="240" r="68" fill="#03C75A"/><text x="338" y="232" text-anchor="middle" font-family="Inter" font-size="21" font-weight="700" fill="#fff">HardNeg</text><text x="338" y="254" text-anchor="middle" font-family="Inter" font-size="13" font-weight="600" fill="#fff">GRPO-only</text>
     <g font-family="Pretendard" font-size="12" font-weight="600" fill="#0A0A0A"><text x="486" y="162">가장 단순 · 재현성 ↑</text><text x="486" y="324">미관측 일반화 best/tied</text></g>
   </svg>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>20</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>21</span></div>
 </section>
 
 <!-- 21 RESULTS TABLE -->
@@ -441,7 +464,7 @@
     </table>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:8.5%;padding:12px 18px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>개선폭 입증:</b> zero-shot VLM(LLaVA-OV)은 ambiguous 문항에서 고정관념 인물을 <b>83% 선택</b>(amb 오류 0.827). 파인튜닝 후 <b class="green">0.0</b> → balanced 1.0은 단순 포화가 아니라 <b>편향 제거의 직접 증거</b>. HardNeg가 OOD best · 셔플 동률최고(격차는 ~2–3문항, 노이즈 수준).</div></div>
-  <div class="footer"><span>* 동일 held-out 공개셋 기준</span><span>21</span></div>
+  <div class="footer"><span>* 동일 held-out 공개셋 기준</span><span>22</span></div>
 </section>
 
 <!-- 22 CORE RESULTS cards -->
@@ -469,7 +492,7 @@
       <div style="text-align:center;border-left:1px solid var(--hair);padding-left:14px"><div class="num" style="font-size:42px">0.855</div><div class="muted" style="font-size:10px">OOD best</div></div>
     </div>
   </div>
-  <div class="footer"><span>* 협소 BBQ 학습에도 미관측 일반추론셋 상승 → 파국적 망각 없음</span><span>22</span></div>
+  <div class="footer"><span>* 협소 BBQ 학습에도 미관측 일반추론셋 상승 → 파국적 망각 없음</span><span>23</span></div>
 </section>
 
 <!-- 23 DACON SCORING -->
@@ -491,7 +514,7 @@
     <div class="card" style="margin-top:12px;padding:16px 18px;border-left:3px solid var(--sky)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">HardNeg ≈ Robust-B</div><div class="body" style="font-size:11.5px;line-height:1.65">예측이 다른 문항은 8,500개 중 <b>52개(0.61%)</b>뿐 = 사실상 동일 모델. net 점수차 0.0015(노이즈) → 동급이면 더 단순한 HardNeg 확정.</div></div>
     <div class="body muted" style="margin-top:12px;font-size:10.5px;line-height:1.6"><b>정직한 경쟁가설:</b> 텍스트집중 우위는 중립이미지 학습에 따른 분포불일치일 수 있음 → “시각 채널 본질적 무정보”로 일반화하지 않음(§6.3).</div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>23</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>24</span></div>
 </section>
 
 <!-- 24 DISCUSSION -->
@@ -504,7 +527,7 @@
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--sky)"><div class="num" style="font-size:34px;color:var(--sky)">6.3</div><div style="font-size:14px;font-weight:700;margin-top:8px">시각 채널 무용성</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">편향 판단이 주로 텍스트로 이뤄짐 → 텍스트집중 1.0 &gt; 실이미지 0.9628. 단 “본질적 무정보”가 아니라 <b>본 파이프라인 속성</b>으로 한정.</div></div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>핵심:</b> 콜드스타트 SFT가 일반화의 적 · GRPO 향상은 노이즈 수준 · HardNeg의 기여는 “복잡도가 불필요함을 입증한 <b>방법론·검증 서사</b>”.</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>24</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>25</span></div>
 </section>
 
 <!-- 25 MODEL SELECTION -->
@@ -527,7 +550,7 @@
     <div class="body" style="margin-top:10px;font-size:12px;line-height:1.8">“Robust 변형이 <b>명확히</b> 능가하고 손실이 없을 때만 채택, <b>혼조면 HardNeg</b>.” → Robust-A/B 어느 것도 명확히 능가하지 못함. <b>혼조 → HardNeg.</b></div>
     <div class="gcard" style="margin-top:16px;padding:14px 16px"><div class="body" style="font-size:11.5px;line-height:1.65">동급이면 <b>더 단순하고 재현성 높으며 독립셋에서 미세 우위인</b> 모델 — 입증이 아니라 <b>보수적 선택 원칙</b>(Occam).</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>25</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>26</span></div>
 </section>
 
 <!-- 26 UNSUCCESSFUL -->
@@ -541,7 +564,7 @@
     <div class="card" style="padding:16px 20px;display:flex;gap:14px"><span style="color:var(--coral);font-weight:700;font-size:20px">✗</span><div><div style="font-size:13.5px;font-weight:700">추론형 · 신경망 보상모델</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:5px">추론형(Explore-3)은 1.65s로 속도 위반 폐기. PRM/MCTS는 reward hacking·비용으로 기각.</div></div></div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:13px 18px"><div class="body" style="font-size:11.5px;line-height:1.6">음성결과는 버린 데이터가 아니라 <b>“복잡도가 이 8B 과제에서 이득을 못 낸다”</b>는 주장을 떠받치는 핵심 증거다. R1의 동명 섹션(Unsuccessful Attempts) 정신을 따른다.</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>26</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>27</span></div>
 </section>
 
 <!-- 27 LIMITATIONS -->
@@ -554,7 +577,7 @@
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--sub)"><div style="font-size:13.5px;font-weight:700">보상 컴포넌트 개별 ablation 미실시</div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">Robust 전체가 HardNeg를 못 이긴 관찰만 있고, 5·6종 보상의 개별 기여 분해는 future work.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--sub)"><div style="font-size:13.5px;font-weight:700">R1 유추의 한계</div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">distillation·대형 교사모델 부재로 R1의 distill-vs-RL 축과 직접 대응 아님 → “포화·단일토큰 과제의 유사 경향”으로 한정.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>27</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>28</span></div>
 </section>
 
 <!-- 28 FUTURE WORK -->
@@ -567,7 +590,7 @@
     <div class="card" style="padding:16px 20px;border-top:3px solid var(--sky)"><div style="display:flex;gap:12px;align-items:center"><span class="num" style="font-size:26px;color:var(--sky)">03</span><div style="font-size:13.5px;font-weight:700">실이미지 학습 통제군</div></div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:8px">실이미지로 학습한 통제군과 비교해 “시각 채널 무정보 vs 분포불일치”를 분리 검증.</div></div>
     <div class="card" style="padding:16px 20px;border-top:3px solid var(--mint)"><div style="display:flex;gap:12px;align-items:center"><span class="num" style="font-size:26px;color:var(--mint)">04</span><div style="font-size:13.5px;font-weight:700">더 큰 base · distillation</div></div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:8px">8B의 천장을 넘기 위한 스케일업/증류 탐색, 그리고 이미지 의존 분포에서의 강건성 검증.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>28</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>29</span></div>
 </section>
 
 <!-- 29 CONCLUSION -->
@@ -590,7 +613,7 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>29</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>30</span></div>
 </section>
 
 <!-- 30 APPENDIX A: W&B TRAINING LOGS -->
@@ -620,7 +643,7 @@
     </div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:13px 18px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>핵심 증거:</b> v6 GRPO의 <b>보상 표준편차(reward_std ≈ 0.6)가 학습 내내 유지</b>됩니다 — 하드네거티브 풀이 reward 신호를 살려둬 정책이 실제로 갱신됨. 포화 분포로 학습한 Sat-GRPO(v5)는 분산≈0으로 신호가 죽어 효과가 0이었습니다.</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>30</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>31</span></div>
 </section>
 
 <!-- 31 APPENDIX B: v4~v8b COMPARISON -->
@@ -639,7 +662,7 @@
     </table>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>한눈에:</b> 모든 파인튜닝 모델이 balanced 1.0으로 포화. v5(포화)·v7(콜드스타트)·v8a/v8b(강건성)의 추가 복잡도는 <b>HardNeg(v6)를 유의하게 넘지 못함</b> — 격차는 ~2–3문항(단일시드 노이즈). 동급이면 가장 단순한 <b class="green">HardNeg(v6)</b>를 택한다(Occam).</div></div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>31</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>32</span></div>
 </section>
 
 <!-- 32 CLOSING -->
@@ -654,7 +677,7 @@
     <div class="card" style="flex:1;padding:16px"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">그럼 무엇을 택하나?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px">동급이면 가장 단순한 HardNeg-GRPO — Occam의 보수적 선택.</div></div>
     <div class="card" style="flex:1;padding:16px;border-top:3px solid var(--green)"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">최종 제출은?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px"><b class="green">HardNeg-GRPO</b> · 텍스트집중 1.0 / 실이미지 0.9628.</div></div>
   </div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>32</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>33</span></div>
 </section>
 
 <!-- 33 REFERENCES -->
@@ -673,7 +696,7 @@
     </div>
   </div>
   <div class="muted" style="position:absolute;left:2.2%;bottom:8%;font-size:10.5px">소프트웨어 도구: Unsloth (FastVisionModel) · TRL (GRPOTrainer) · vLLM (고속 추론)</div>
-  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>33</span></div>
+  <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>34</span></div>
 </section>
 
 </body>

@@ -2,25 +2,36 @@
 # 2026 성균관대 멀티모달 AI Bias 챌린지 — 의존성 (2차 제출용)
 # 기준 평가환경: RTX A6000 48GB / Python 3.10 / CUDA 12.4 / PyTorch 2.6.0 / Ubuntu 20.04
 # (개발은 Python 3.11에서 진행. 추론 코드는 Python 3.10 기준환경에서 실행 가능.)
+#
+# [재현 권장 경로] Private Score는 공개 가중치(psh3333/dacon-skku-bias-vlm-v6)를 받아
+#   아래 [추론] 섹션만 설치하면 복원됩니다(학습 재설치 불필요). 학습부터 재현하려면
+#   [학습] 섹션을 별도 venv(Python 3.11)에 설치하십시오.
 # ============================================================
 
-# ---- [추론] inference/ — 오프라인, 외부 API 호출 0 (제출 채점용) ----
+# ---- [추론] inference/ — 오프라인, 외부 API 호출 0 (제출 채점 = Private Score 복원의 권위 경로) ----
 torch==2.6.0                 # CUDA 12.4 빌드: --index-url https://download.pytorch.org/whl/cu124
 torchvision==0.21.0
-transformers==5.6.0          # Qwen3-VL 지원에 필요(>=4.57). torch 2.6 호환 확인됨
+transformers==5.6.0          # Qwen3-VL 지원 필요(>=4.57). torch 2.6 호환 확인됨
 accelerate==1.6.0
 qwen-vl-utils==0.0.14        # Qwen-VL 이미지 전처리
 pillow==11.3.0
 pandas==2.3.3
 
-# ---- [학습] train/ — LLaMA-Factory QLoRA SFT. 추론과 분리(별도 환경 권장) ----
-# Python 3.11 권장. LLaMA-Factory는 소스 설치:
-#   git clone https://github.com/hiyouga/LLaMA-Factory && pip install -e LLaMA-Factory
+# ---- [학습 · 최종 모델 경로] train/unsloth/ — Unsloth + TRL + vLLM (별도 venv 권장, Python 3.11) ----
+# 최종 모델 HardNeg-GRPO(v6)는 Unsloth FastVisionModel로 SFT/GRPO 학습되며,
+# grpo_hard_v6.py 의 GRPO는 vLLM fast_inference 를 사용합니다(둘 다 필수).
+# 공식 설치 권장:  pip install "unsloth"        # torch 2.6/CUDA 12.4 빌드에 맞춰 설치(공식 가이드 참조)
+unsloth                      # FastVisionModel (sft_unsloth.py / grpo_hard_v6.py 등) — 필수
+vllm                         # GRPO fast_inference 백엔드 — 필수
+trl                          # GRPOTrainer / SFTTrainer (unsloth가 호환 버전 동반 설치)
 peft==0.18.1
 datasets==4.0.0
+# ※ unsloth/vllm/trl/transformers 의 학습환경 정확한 핀은 학습 pod의 `pip freeze` 기준입니다.
+#    (추론=Private Score 복원은 위 [추론] 섹션만으로 자기완결적이며, 본 학습 섹션과 무관합니다.)
 
-# ---- [강화학습, 선택] train/grpo/ — TRL GRPO (별도 venv) ----
-trl==1.6.0                   # GRPO + Qwen3-VL 동시 지원 확인됨 (transformers 5.6 호환)
+# ---- [학습 · 대체/레거시 경로] train/llamafactory/ — LLaMA-Factory QLoRA SFT (선택) ----
+# train/llamafactory/*.yaml 사용 시: LLaMA-Factory를 소스 설치
+#   git clone https://github.com/hiyouga/LLaMA-Factory && pip install -e "LLaMA-Factory[metrics]"
 
 # ---- [데이터 생성, 선택] data_build/ — 학습 데이터 구성 시에만 (추론과 무관) ----
-# openai>=1.0   # 진짜 CoT 합성용(v2/v3 계열). v4는 미사용. 추론 단계에선 절대 호출 안 함.
+# openai>=1.0   # 진짜 CoT 합성용(v2/v3 계열). v4/v6는 미사용. 추론 단계에선 절대 호출 안 함.

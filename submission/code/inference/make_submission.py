@@ -137,7 +137,11 @@ def main():
             fb_cnt += 1
             src = "PLACEHOLDER"
             if fb_img is None:
-                fb_img = Image.open(args.fallback_image).convert("RGB")
+                if args.fallback_image and os.path.exists(args.fallback_image):
+                    fb_img = Image.open(args.fallback_image).convert("RGB")
+                else:
+                    # 미동봉/미지정 시 중립(회색) 이미지 자동생성 — 텍스트집중 레짐 결정론 유지(FileNotFoundError 방지)
+                    fb_img = Image.new("RGB", (336, 336), (128, 128, 128))
             img = fb_img
         items.append((r["sample_id"], r.get("context", ""), r["question"], answers, img, src))
 

@@ -15,7 +15,7 @@
 | `발표자료_pk42ac.pdf` | 솔루션 발표자료 (15분, PDF) | 2 발표자료 |
 | `발표대본_pk42ac.md` | 발표 대본 + Q&A (참고용) | — |
 | `V6_SUBMISSION_BUNDLE.md` | 논문(방법·결과) + 재현 코드 단일 번들 | 참고 |
-| **[직접 추가 필요] 재학증명서** | 박성호 재학증명서 | **3 참가자격 증빙** |
+| `참가자격증빙/박성호-국문-재학증명서.pdf` | 박성호 재학증명서 (단독팀) | **3 참가자격 증빙** |
 
 ---
 
@@ -33,6 +33,7 @@
 
 - **HardNeg-GRPO (v6)** = Qwen3-VL-8B-Instruct(base) + 단일토큰 SFT + 하드네거티브 GRPO
 - **가중치(HuggingFace):** https://huggingface.co/psh3333/dacon-skku-bias-vlm-v6
+  - 가중치는 8B(≈16GB)라 메일 첨부가 불가하여 **공개 HuggingFace 링크**(Apache-2.0)로 제공합니다. 운영진 요청 시 파일 직접 전송도 가능합니다.
 - **추론 결정성:** greedy 디코딩(`do_sample=False`) → 동일 모델·동일 입력이면 출력이 비트단위 동일
   → **Private Score 결정론적 복원** 보장.
 
@@ -61,11 +62,12 @@ python code/train/unsloth/grpo_hard_v6.py \
     --base outputs/merged_v4 --out outputs/merged_v6 \
     --hardpool hardpool.json --steps 400 --rank 32 --num_gen 4
 
-# 5) 추론·제출 CSV 생성 (Private Score)
+# 5) 추론·제출 CSV 생성 (Private Score) — 실이미지 멀티모달, 채점 시 --max_pixels 262144(512^2)
 python code/inference/make_submission.py \
     --model outputs/merged_v6 \
     --test_csv data/test.csv --image_root data/test/images \
     --sample_submission data/sample_submission.csv \
+    --max_pixels 262144 \
     --out submission_v6_final.csv
 ```
 
@@ -81,6 +83,7 @@ python code/inference/make_submission.py \
 - **데이터:** `code/data_build/make_bbq_clean.py`, `code/data_build/mine_hard.py`
 - 그 외 `grpo_unsloth.py`(v5)·`sft_reason_v7.py`(v7)·`grpo_robust_v8*.py`(v8a/v8b) 등은
   **ablation·음성결과 재현용**이며, 최종 Private Score 복원에는 위 경로만 필요합니다.
+> ※ ablation/실험 스크립트(train의 v5/v7/v8, data_build의 build_v7·build_v8*·build_ood2·mine_v8_dynamic·mine_unqover 등)는 원본 RunPod 작업경로(`/workspace/...`)를 참조하므로 그대로는 실행되지 않을 수 있습니다. **최종 v6 복원 경로(위 1~5단계)만 실행을 보장**하며, 나머지는 투명성·출처 제공용입니다.
 
 ---
 
@@ -107,8 +110,8 @@ python code/inference/make_submission.py \
 - [x] 코드·주석 **UTF-8**
 - [x] 외부 API 추론 없음 (오프라인 가중치 로드)
 - [x] **솔루션 발표자료 PDF** (`발표자료_pk42ac.pdf`)
-- [ ] **재학증명서 (박성호)** ← 직접 발급·추가 필요  *(요건 3)*
-- [ ] (선택) 생성된 외부데이터 실파일 동봉
+- [x] **재학증명서 (박성호)** — `참가자격증빙/박성호-국문-재학증명서.pdf` 포함  *(요건 3 · 단독팀)*
+- [ ] (선택) 생성된 외부데이터 실파일 동봉 — 현재는 공개 HF + 재생성 스크립트로 대체
 
 ---
 *최종 모델 = Qwen3-VL-8B-Instruct + SFT + 하드네거티브 GRPO · 외부 API 추론 0 · greedy 결정론 복원*

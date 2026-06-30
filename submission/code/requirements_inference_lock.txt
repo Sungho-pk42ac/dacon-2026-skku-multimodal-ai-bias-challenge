@@ -1,0 +1,16 @@
+# 검증된 추론 환경 lock — RunPod RTX A6000 48GB, Python 3.10.12, 2026-06-30 실측(pip freeze 발췌)
+# 이 조합으로 설치·로드·추론·결정성(2회 100% 동일)을 실측 확인함. (전체 보고: ../REPRODUCIBILITY_검증.md)
+# torch/torchvision 은 CUDA 12.4 빌드: --index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0
+torchvision==0.21.0+cu124
+transformers==5.6.0
+accelerate==1.6.0
+qwen-vl-utils==0.0.14
+pillow==11.3.0
+pandas==2.3.3
+# --- 핵심 전이 의존성(실측, 수치 재현 관련) ---
+numpy==2.2.6
+safetensors==0.8.0
+tokenizers==0.22.2
+huggingface_hub==1.21.0
+triton==3.2.0

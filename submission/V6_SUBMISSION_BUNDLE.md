@@ -240,7 +240,7 @@ python data_build/make_bbq_clean.py   # 1) 누출제거 클린셋 + val_ids SSOT
 python train/unsloth/sft_unsloth.py --train data/bbq_v4_train.json --out outputs/merged_v4 --epochs 3 --rank 32   # 2) v4 SFT(단일토큰)
 python data_build/mine_hard.py --base outputs/merged_v4 --out /workspace/hardpool.json --per 500   # 3) 하드네거티브 채굴 → hardpool.json
 python train/unsloth/grpo_hard_v6.py --base outputs/merged_v4 --out outputs/merged_v6 --hardpool /workspace/hardpool.json --steps 400 --rank 32 --num_gen 4   # 4) v6 GRPO → 최종 모델
-python inference/make_submission.py --model outputs/merged_v6 --test_csv data/test.csv --image_root data/test/images --sample_submission data/sample_submission.csv --out submissions/submission_v6_final.csv --max_pixels 262144   # 5) 실이미지 제출(텍스트집중은 --allow_placeholder)
+python inference/make_submission.py --model outputs/merged_v6 --test_csv data/test.csv --image_root data/test/images --sample_submission data/sample_submission.csv --max_pixels 262144 --out submissions/submission_v6_final.csv   # 5) 실이미지 멀티모달 제출(채점본=0.9628). --max_pixels 262144(512^2)=채점 시 동일 설정·DACON 0.5s/샘플 시간한도 내
 ```
 
 ## `prompts.py`
