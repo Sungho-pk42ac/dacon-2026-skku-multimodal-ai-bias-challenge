@@ -514,6 +514,7 @@
     <div class="card" style="margin-top:12px;padding:16px 18px;border-left:3px solid var(--sky)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">HardNeg ≈ Robust-B</div><div class="body" style="font-size:11.5px;line-height:1.65">예측이 다른 문항은 8,500개 중 <b>52개(0.61%)</b>뿐 = 사실상 동일 모델. net 점수차 0.0015(노이즈) → 동급이면 더 단순한 HardNeg 확정.</div></div>
     <div class="body muted" style="margin-top:12px;font-size:10.5px;line-height:1.6"><b>정직한 경쟁가설:</b> 텍스트집중 우위는 중립이미지 학습에 따른 분포불일치일 수 있음 → “시각 채널 본질적 무정보”로 일반화하지 않음(§6.3).</div>
   </div>
+  <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;top:80%;padding:11px 18px;border-top:3px solid var(--green)"><div class="body" style="font-size:11px;line-height:1.55"><b>재현(공식 경로):</b> 공개 가중치 <span class="en">psh3333/dacon-skku-bias-vlm-v6</span> + 실이미지 greedy(<span class="en">--max_pixels 262144</span>) → <b>0.9628 결정론 복원</b>. RTX A6000서 추론 <b>결정성 100%</b>·제출본 <b>99.29% 일치</b> 독립 검증.</div></div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>24</span></div>
 </section>
 
@@ -642,6 +643,7 @@
       <div class="muted" style="font-size:10.5px;line-height:1.5">400 steps · G=4 · 정확도 보상 0.2~0.85 활발히 진동</div>
     </div>
   </div>
+  <div class="card" style="position:absolute;left:2.2%;right:2.2%;top:63%;padding:13px 18px;border-left:3px solid var(--green)"><div style="font-size:13px;font-weight:700;margin-bottom:5px">✓ 재현성 독립 검증 <span class="muted en" style="font-weight:400;font-size:10px">RunPod RTX A6000 · 2026-06-30</span></div><div class="body" style="font-size:11px;line-height:1.6">깨끗한 인스턴스에서 <b>전 파이프라인 실제 실행</b> — 데이터 생성(누출 0)·SFT·하드네거티브 채굴·GRPO(vLLM)·추론 <b>전 단계 무에러</b>. 추론 <b>결정성 100%</b>(2회 비트동일) · 텍스트집중 제출본 <b>99.29% 일치</b>. 상세 <span class="en">REPRODUCIBILITY_검증.md</span>.</div></div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:13px 18px"><div class="body" style="font-size:11.5px;line-height:1.6"><b>핵심 증거:</b> v6 GRPO의 <b>보상 표준편차(reward_std ≈ 0.6)가 학습 내내 유지</b>됩니다 — 하드네거티브 풀이 reward 신호를 살려둬 정책이 실제로 갱신됨. 포화 분포로 학습한 Sat-GRPO(v5)는 분산≈0으로 신호가 죽어 효과가 0이었습니다.</div></div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>31</span></div>
 </section>
