@@ -514,7 +514,7 @@
     <div class="card" style="margin-top:12px;padding:16px 18px;border-left:3px solid var(--sky)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">HardNeg ≈ Robust-B</div><div class="body" style="font-size:11.5px;line-height:1.65">예측이 다른 문항은 8,500개 중 <b>52개(0.61%)</b>뿐 = 사실상 동일 모델. net 점수차 0.0015(노이즈) → 동급이면 더 단순한 HardNeg 확정.</div></div>
     <div class="body muted" style="margin-top:12px;font-size:10.5px;line-height:1.6"><b>정직한 경쟁가설:</b> 텍스트집중 우위는 중립이미지 학습에 따른 분포불일치일 수 있음 → “시각 채널 본질적 무정보”로 일반화하지 않음(§6.3).</div>
   </div>
-  <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;top:80%;padding:11px 18px;border-top:3px solid var(--green)"><div class="body" style="font-size:11px;line-height:1.55"><b>재현(공식 경로):</b> 공개 가중치 <span class="en">psh3333/dacon-skku-bias-vlm-v6</span> + 실이미지 greedy(<span class="en">--max_pixels 262144</span>) → <b>0.9628 결정론 복원</b>. RTX A6000서 추론 <b>결정성 100%</b>·제출본 <b>99.29% 일치</b> 독립 검증.</div></div>
+  <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;top:80%;padding:11px 18px;border-top:3px solid var(--green)"><div class="body" style="font-size:11px;line-height:1.55"><b>재현(공식=제출):</b> 공개 가중치 <span class="en">psh3333/dacon-skku-bias-vlm-v6</span> · 텍스트집중(중립 이미지) greedy → <b>Public 1.0 / Private 0.9326</b> 결정론 복원(제출본 99.29% 일치). 실이미지(<span class="en">--max_pixels 262144</span>)로도 함께 추론 → 0.9628(ablation). RTX A6000 결정성 100%.</div></div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>24</span></div>
 </section>
 
