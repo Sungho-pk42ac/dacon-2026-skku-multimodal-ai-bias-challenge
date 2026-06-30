@@ -51,6 +51,7 @@ def parse_args():
     ap.add_argument("--rank", type=int, default=32, help="LoRA rank(=alpha)")
     ap.add_argument("--num_gen", type=int, default=4, help="프롬프트당 생성 샘플 수(G)")
     ap.add_argument("--max_items", type=int, default=0, help=">0이면 하드풀 상한")
+    ap.add_argument("--seed", type=int, default=42, help="GRPO 시드(다중시드 재현용)")
     return ap.parse_args()
 
 
@@ -127,6 +128,7 @@ def build_prompt_row(item, placeholder_image):
 
 def main():
     args = parse_args()
+    random.seed(args.seed)
 
     # 무거운 의존성은 여기서 지연 import — unsloth를 trl/datasets보다 먼저 불러
     # 내부 패치 순서를 보장(이 순서를 바꾸면 안 됨).
@@ -145,7 +147,7 @@ def main():
         model, finetune_vision_layers=False, finetune_language_layers=True,
         finetune_attention_modules=True, finetune_mlp_modules=True,
         r=args.rank, lora_alpha=args.rank,
-        use_gradient_checkpointing="unsloth", random_state=3407,
+        use_gradient_checkpointing="unsloth", random_state=args.seed,
     )
 
     # 2) placeholder 이미지 (대회 포맷=VLM이지만 본 과제는 텍스트 근거 기반)
@@ -166,7 +168,7 @@ def main():
         optim="adamw_8bit", per_device_train_batch_size=args.num_gen, num_generations=args.num_gen,
         gradient_accumulation_steps=4, max_prompt_length=1024, max_completion_length=4,
         max_steps=args.steps, save_steps=args.steps, logging_steps=5, temperature=0.9,
-        bf16=True, report_to="wandb", run_name="grpo-v6-hardneg", output_dir="outputs/grpo_v6_unsloth",
+        bf16=True, report_to="wandb", run_name="grpo-v6-hardneg", output_dir="outputs/grpo_v6_unsloth", seed=args.seed,
     )
 
     # 5) 학습 → 16bit 병합 저장

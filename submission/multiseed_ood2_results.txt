@@ -1,0 +1,16 @@
+# v6 HardNeg-GRPO 다중시드 ood2 재현 — 원자료 (RTX 6000 Ada, 2026-06-30 UTC)
+# 환경: fresh RunPod, torch 2.6.0+cu124(추론/평가) / unsloth 2026.6.9·trl 0.24.0·vllm 0.19.1(학습)
+# 공개데이터만 사용(BBQ + ood2). DACON 평가셋/이미지 미사용.
+# 파이프라인: make_bbq_clean → sft_unsloth(merged_v4, max_steps 2500=수렴) → mine_hard(hardpool 782)
+#            → grpo_hard_v6(--steps 400 --rank 32 --num_gen 4 --seed {42,123,2024}) → eval_suite(ood2_eval 600)
+# 타임라인: SFT_DONE 11:10:54 · MINE_DONE 11:18:51 · ALL_DONE 13:21:02 UTC
+
+EVAL_SUITE_RESULT {"tag": "v4base", "ood_acc": 0.7067, "shuffle_consistency": 0.8517, "output_format_validity": 0.855, "acc_by_src": {"ood2_arcc": 0.9, "ood2_hellaswag": 0.6733, "ood2_mmlu": 0.6133, "ood2_wino": 0.64}}
+EVAL_SUITE_RESULT {"tag": "s42",    "ood_acc": 0.7067, "shuffle_consistency": 0.845,  "output_format_validity": 0.8517, "acc_by_src": {"ood2_arcc": 0.8933, "ood2_hellaswag": 0.6733, "ood2_mmlu": 0.6067, "ood2_wino": 0.6533}}
+EVAL_SUITE_RESULT {"tag": "s123",   "ood_acc": 0.7117, "shuffle_consistency": 0.8417, "output_format_validity": 0.8533, "acc_by_src": {"ood2_arcc": 0.9, "ood2_hellaswag": 0.6733, "ood2_mmlu": 0.6133, "ood2_wino": 0.66}}
+EVAL_SUITE_RESULT {"tag": "s2024",  "ood_acc": 0.705,  "shuffle_consistency": 0.8417, "output_format_validity": 0.8633, "acc_by_src": {"ood2_arcc": 0.8733, "ood2_hellaswag": 0.6667, "ood2_mmlu": 0.6267, "ood2_wino": 0.6533}}
+
+# 통계 (3 seeds):
+# v6 ood2     mean = 0.7078, sample sd = 0.0035, min 0.7050 / max 0.7117, range 0.0067
+# v6 shuffle  mean = 0.8428, sd = 0.0019
+# base(SFT) ood2 = 0.7067 → GRPO gain = +0.0011 (시드 노이즈 ±0.0035 내 = 유의차 없음)
