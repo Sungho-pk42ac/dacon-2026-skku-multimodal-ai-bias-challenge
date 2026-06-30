@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Simpler-is-Better — HardNeg-GRPO 최종 발표</title>
+<title>정당화된 신뢰의 멀티모달 VLM (HardNeg-GRPO) — pk42ac 최종 발표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
@@ -56,9 +56,9 @@
   <div style="position:absolute;top:0;right:0;width:30%;height:100%;background:radial-gradient(120% 60% at 90% 30%,rgba(255,255,255,.55),transparent 60%)"></div>
   <div style="position:absolute;left:5%;top:9%;width:70%">
     <div class="kicker" style="margin-bottom:14px">2026 성균관대학교 멀티모달 AI Bias 챌린지 · 최종 제출 발표</div>
-    <div class="h1en" style="font-size:108px;line-height:.96;letter-spacing:-3px">SIMPLER<br>IS <span class="green">BETTER</span></div>
-    <div style="margin-top:22px;font-size:19px;font-weight:600">GRPO-only로 멀티모달 AI 편향을 완화하다</div>
-    <div class="muted" style="margin-top:8px;font-size:13.5px;line-height:1.7">복잡도의 추가 이득을 검출하지 못한 8B RLVR 음성결과 연구 (단일시드)<br>최종 <b class="green">Private 0.9326</b> (실이미지 · Public 0.9628) · 형식 SFT + GRPO · base Qwen3-VL-8B-Instruct[7] (Apache-2.0)</div>
+    <div class="h1en" style="font-size:90px;line-height:.98;letter-spacing:-3px">WARRANTED<br><span class="green">TRUST</span></div>
+    <div style="margin-top:22px;font-size:19px;font-weight:600">근거 없으면 답하지 않는, <span class="green">정당화된 신뢰</span>의 멀티모달 VLM</div>
+    <div class="muted" style="margin-top:8px;font-size:13.5px;line-height:1.7">그 철학을 구현한 방법 = <b class="green">HardNeg-GRPO</b>(형식 SFT + GRPO) · 기여는 점수가 아니라 <b>기권·신뢰 정책 + 검증·재현성</b><br>제출 = v6 텍스트집중(시각 shortcut 억제) <b>Public 1.0 → Private 0.9326</b> · base Qwen3-VL-8B-Instruct[7] (Apache-2.0)</div>
   </div>
   <div style="position:absolute;left:5%;bottom:8%"><div class="en" style="font-weight:800;font-size:32px;letter-spacing:-1px">TEAM <span class="green">pk42ac</span></div><div class="muted" style="font-size:13px;margin-top:6px">박성호 · 2026.06</div></div>
   <div class="en" style="position:absolute;left:5%;bottom:3%;font-size:10.5px;color:var(--sub);letter-spacing:.2px">코드·실험 <b style="color:var(--ink)">github.com/Sungho-pk42ac/dacon-2026-skku-multimodal-ai-bias-challenge</b> &nbsp;·&nbsp; 모델 <b style="color:var(--ink)">huggingface.co/psh3333/dacon-skku-bias-vlm-v6</b></div>
@@ -85,7 +85,7 @@
   <div style="position:absolute;left:2.2%;top:30%;width:38%">
     <div class="gcard" style="padding:18px 20px">
       <div class="kicker" style="margin-bottom:10px">30초 요약</div>
-      <div class="body" style="font-size:12.5px;line-height:1.9">AI가 이미지 속 사람을 <b>성별·인종 같은 고정관념</b>으로 판단하지 않게 만드는 게 목표입니다.<br><br>우리는 <b class="green">가장 단순한 방법(GRPO 하나)</b>만으로 편향을 없앨고, 더 복잡한 방법을 4가지나 시도했지만 <b>이보다 더 나아지지 않았습니다.</b><br><br>그래서 결론은 — <b>“정교함이 아니라 단순함이 이겼다.”</b></div>
+      <div class="body" style="font-size:12.5px;line-height:1.9">AI가 이미지 속 사람을 <b>성별·인종 외형(고정관념)</b>으로 판단하지 않게 만드는 게 목표입니다.<br><br>핵심은 두 가지 — <b class="green">근거 없으면 ‘판단 불가’로 기권</b>하게 하고, <b class="green">시각 외형 shortcut을 차단</b>해 편향 신호를 낮춥니다.<br><br>그리고 진짜 기여는 점수가 아니라 — <b>“재현·검증으로 신뢰를 입증했다.”</b></div>
     </div>
   </div>
   <div style="position:absolute;right:2.2%;top:30%;width:55%;display:flex;flex-direction:column;gap:9px">
@@ -118,8 +118,8 @@
 <!-- 04 ABSTRACT -->
 <section class="slide">
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
-  <div class="ttl"><div class="k">ABSTRACT</div><h2>콜드스타트 없이 GRPO만으로 편향을 제거하고,<br>복잡도가 그 이상을 못 낸다는 것을 ablation으로 보인다</h2></div>
-  <div style="position:absolute;left:2.2%;top:33%;width:55%"><div class="body" style="font-size:12.5px;line-height:1.85"><b class="green">HardNeg-GRPO</b>는 가벼운 형식 단일토큰 SFT 위에서 GRPO만으로(추론 콜드스타트 없음 — R1-Zero[1]의 cold-start-free RL 정신 차용, SFT-free는 아님) 편향을 제거하면서 일반화를 보존하고, 이를 최종 제출로 택한다. 나아가 <b>더 복잡한 RL 변형이 8B에서 유의한 이득을 못 냄</b>을 광범위한 ablation으로 관찰한다(음성결과): 포화 GRPO는 신호 부재, 콜드스타트 SFT는 일반화 이득 없이 암기 위험, 강건성 GRPO는 자신이 목표한 지표에서조차 단순한 HardNeg-GRPO를 못 이겼다. 주된 기여는 점수가 아니라 <b>“무엇이 일반화를 살리고 죽이는가”의 분석</b>이다.</div></div>
+  <div class="ttl"><div class="k">ABSTRACT</div><h2>근거 있으면 답·없으면 기권하는 신뢰 정책을 학습하고,<br>측정 지표상 편향 신호를 낮춘다 — 점수가 아닌 검증으로</h2></div>
+  <div style="position:absolute;left:2.2%;top:33%;width:55%"><div class="body" style="font-size:12.5px;line-height:1.85"><b class="green">HardNeg-GRPO</b>(형식 SFT + GRPO)로 <b>근거 있으면 커밋·없으면 기권</b>하는 신뢰 정책을 학습해 <b>측정 지표상 편향 신호를 낮춘다</b>(s<sub>AMB</sub> 0.087→0). 제출은 <b>시각 외형 shortcut을 차단한 텍스트집중 레짐</b>(Public 1.0 → Private 0.9326). 더 복잡한 RL 변형 4종은 8B에서 유의한 이득을 못 냈다(음성결과). 주된 기여는 점수가 아니라 <b>“무엇이 일반화를 살리고 죽이는가”의 분석과 전 과정 재현·검증</b>이다.</div></div>
   <div style="position:absolute;right:2.2%;top:33%;width:38%"><div class="gcard" style="padding:18px 20px"><div class="kicker" style="margin-bottom:14px">3 TAKEAWAYS</div>
     <div style="display:flex;gap:12px;margin-bottom:14px"><span class="num green" style="font-size:30px">01</span><div class="body" style="font-size:11.5px">콜드스타트 SFT가 일반화의 적. RL 단독은 일반화를 해치지 않는다.</div></div>
     <div style="display:flex;gap:12px;margin-bottom:14px"><span class="num green" style="font-size:30px">02</span><div class="body" style="font-size:11.5px">GRPO 향상폭은 노이즈 수준. base 잠재능력 한계 내.</div></div>
@@ -152,10 +152,10 @@
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span class="on">OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span>DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
   <div class="ttl"><div class="k">§1 CONTRIBUTIONS</div><h2>본 연구의 5가지 기여</h2></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:29%;display:flex;flex-direction:column;gap:13px">
-    <div class="card" style="padding:15px 20px;border-left:3px solid var(--green);display:flex;gap:18px;align-items:center"><span class="num green" style="font-size:30px">1</span><div class="body" style="font-size:12.5px"><b>형식 SFT + GRPO로 편향 제거 + 일반화 보존을 동시 달성</b> — 추론 콜드스타트 SFT 불필요(R1-Zero의 cold-start-free 정신 · 형식 SFT는 사용). 최종 제출로 선택.</div></div>
+    <div class="card" style="padding:15px 20px;border-left:3px solid var(--green);display:flex;gap:18px;align-items:center"><span class="num green" style="font-size:30px">1</span><div class="body" style="font-size:12.5px"><b>기권·신뢰 정책 학습 → 측정 편향 신호 감소</b> — 근거 없으면 ‘판단 불가’. held-out 지표상 s<sub>AMB</sub> 0.087→0 · 사람선택오류 0.18→0. 형식 SFT + GRPO.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--sky);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--sky)">2</span><div class="body" style="font-size:12.5px"><b>복잡도 증가가 유의한 이득을 못 냄</b>(음성결과) — 포화·콜드스타트·강건성 변형 모두 HardNeg를 명확히 능가하지 못함.</div></div>
-    <div class="card" style="padding:15px 20px;border-left:3px solid var(--purple);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--purple)">3</span><div class="body" style="font-size:12.5px"><b>독립 held-out 외부검증</b>(ood2: MMLU/HellaSwag/ARC-C/WinoGrande)으로 모델 선택의 견고성을 검증.</div></div>
-    <div class="card" style="padding:15px 20px;border-left:3px solid var(--mint);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--mint)">4</span><div class="body" style="font-size:12.5px"><b>두 추론 레짐 ablation</b> — 실이미지 Public 0.9628(정직한 멀티모달, 최종 Private 0.9326). 텍스트집중 Public 1.0은 “텍스트 근거 우세” ablation이나 <b>Private 0.9326로 하락(Public 과적합)</b>.</div></div>
+    <div class="card" style="padding:15px 20px;border-left:3px solid var(--purple);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--purple)">3</span><div class="body" style="font-size:12.5px"><b>검증·재현성 중심 기여</b> — 독립 ood2(MMLU·HellaSwag·ARC-C·Wino) + <b>3시드(0.708±0.0035)</b> + 기준환경(A6000·torch2.6) 정합·추론 결정성 100% 재현.</div></div>
+    <div class="card" style="padding:15px 20px;border-left:3px solid var(--mint);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--mint)">4</span><div class="body" style="font-size:12.5px"><b>시각 외형 shortcut 억제</b> — 제출(텍스트집중)은 성별·인종 등 <b>편향 유발 외형단서를 입력에서 차단</b>. Public 1.0 → Private 0.9326. 실이미지(0.9628)는 시각 채널 ON ablation.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--coral);display:flex;gap:18px;align-items:center"><span class="num" style="font-size:30px;color:var(--coral)">5</span><div class="body" style="font-size:12.5px"><b>규칙기반 outcome 보상만 사용</b>(신경망 보상모델 X) — reward hacking·비용 회피.</div></div>
   </div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>07</span></div>
@@ -503,14 +503,14 @@
   <div style="position:absolute;left:2.2%;top:30%;width:50%">
     <svg width="100%" height="240" viewBox="0 0 520 240">
       <g font-family="Inter" font-size="12.5" font-weight="600">
-        <text x="0" y="30" fill="#03C75A">HardNeg · 실이미지 ★ 공식 제출</text><rect x="0" y="40" width="481" height="34" fill="#03C75A"/><text x="420" y="62" fill="#fff" font-size="16" font-weight="700">.9628</text>
-        <text x="0" y="105">HardNeg · 텍스트집중 (ablation)</text><rect x="0" y="115" width="500" height="34" fill="#C8C8C8"/><text x="470" y="137" font-size="14" font-weight="700">1.0</text>
+        <text x="0" y="30" fill="#03C75A">HardNeg · 텍스트집중 ★ 제출 (시각 shortcut 억제)</text><rect x="0" y="40" width="500" height="34" fill="#03C75A"/><text x="455" y="62" fill="#fff" font-size="16" font-weight="700">1.0</text>
+        <text x="0" y="105">HardNeg · 실이미지 (ablation · 시각 ON)</text><rect x="0" y="115" width="481" height="34" fill="#C8C8C8"/><text x="486" y="137" font-size="14" font-weight="700">.9628</text>
         <text x="0" y="180">Robust-B · 실이미지</text><rect x="0" y="190" width="482" height="34" fill="#C8C8C8"/><text x="487" y="212" font-size="14" font-weight="700">.9643</text>
       </g></svg>
     <div class="muted" style="font-size:10px;margin-top:4px">DACON <b>Public</b> 리더보드 (test 8,500, 라벨 비공개) · 최종 순위는 <b>Private(40%)</b>가 결정</div>
   </div>
   <div style="position:absolute;right:2.2%;top:29%;width:43%">
-    <div class="gcard" style="padding:16px 18px;border-left:3px solid var(--coral)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">Public → Private (정직성)</div><div class="body" style="font-size:11.5px;line-height:1.65">텍스트집중 <b>Public 1.0</b>은 <b>Private(최종) 0.9326</b>으로 하락 — Public 과적합. 1.0은 일반화가 아니라 <b>Public 환상</b>. 멀티모달 정합성·견고성에서 실이미지(0.9628)가 본선 경로.</div></div>
+    <div class="gcard" style="padding:16px 18px;border-left:3px solid var(--green)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">제출 = 시각 shortcut 억제 (텍스트집중)</div><div class="body" style="font-size:11.5px;line-height:1.65">외형(성별·인종) 단서가 곧 편향 유발원 → 입력에서 차단하고 텍스트 근거로 판단. <b>Public 1.0 → Private 0.9326</b>(하락 폭은 정직 보고). 실이미지(0.9628)는 시각 채널 켠 ablation.</div></div>
     <div class="card" style="margin-top:12px;padding:16px 18px;border-left:3px solid var(--sky)"><div style="font-size:13px;font-weight:700;margin-bottom:6px">HardNeg ≈ Robust-B</div><div class="body" style="font-size:11.5px;line-height:1.65">예측이 다른 문항은 8,500개 중 <b>52개(0.61%)</b>뿐 = 사실상 동일 모델. net 점수차 0.0015(노이즈) → 동급이면 더 단순한 HardNeg 확정.</div></div>
     <div class="body muted" style="margin-top:12px;font-size:10.5px;line-height:1.6"><b>정직한 경쟁가설:</b> 텍스트집중 우위는 중립이미지 학습에 따른 분포불일치일 수 있음 → “시각 채널 본질적 무정보”로 일반화하지 않음(§6.3).</div>
   </div>
@@ -525,7 +525,7 @@
   <div style="position:absolute;left:2.2%;right:2.2%;top:30%;display:flex;gap:2%">
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--green)"><div class="num green" style="font-size:34px">6.1</div><div style="font-size:14px;font-weight:700;margin-top:8px">8B + RLVR의 천장</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">8B에 더 복잡한 RL을 얹어도 단순 GRPO-only를 유의하게 못 넘음 → R1의 “작은 모델엔 직접 RL 추가이득 제한적”과 <b>유사 방향</b>(직접 대응 아님).</div></div>
     <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--coral)"><div class="num" style="font-size:34px;color:var(--coral)">6.2</div><div style="font-size:14px;font-weight:700;margin-top:8px">콜드스타트 vs GRPO-only</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">ColdStart는 OOD 최저(0.84) + 암기 위험. <b>좁은·암기형 SFT는 일반화에 해롭다</b>(Chu et al. 2025 [3]). R1 콜드스타트 성공과의 차이 = 데이터 다양성.</div></div>
-    <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--sky)"><div class="num" style="font-size:34px;color:var(--sky)">6.3</div><div style="font-size:14px;font-weight:700;margin-top:8px">시각 채널의 낮은 한계효용</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">편향 판단이 주로 텍스트로 이뤄짐 → 텍스트집중 1.0 &gt; 실이미지 0.9628. 단 “본질적 무정보”가 아니라 <b>본 파이프라인 속성</b>으로 한정 → 공식 제출은 실이미지(0.9628).</div></div>
+    <div class="card" style="flex:1;padding:18px 20px;border-top:3px solid var(--sky)"><div class="num" style="font-size:34px;color:var(--sky)">6.3</div><div style="font-size:14px;font-weight:700;margin-top:8px">시각 stereotype shortcut 억제</div><div class="body muted" style="font-size:11.5px;line-height:1.65;margin-top:8px">외형 기반 성별·인종 단서는 편향의 직접 원인 → 텍스트집중(중립 이미지)이 그 shortcut을 차단. 이를 제출 레짐으로 선택. 단 이미지 의존 정답엔 취약(§9 한계).</div></div>
   </div>
   <div class="gcard" style="position:absolute;left:2.2%;right:2.2%;bottom:9%;padding:14px 18px"><div class="body" style="font-size:12px;line-height:1.6"><b>핵심:</b> 콜드스타트 SFT가 일반화의 적 · GRPO 향상은 노이즈 수준 · HardNeg의 기여는 “복잡도가 불필요함을 입증한 <b>방법론·검증 서사</b>”. <b>사회적 함의:</b> ‘근거 있을 때만 답하고 없으면 기권’ 정책은 사용자가 AI를 <b>정당화된 신뢰(warranted trust)</b>로 대하게 하는 토대다.</div></div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac</span><span>25</span></div>
@@ -573,7 +573,7 @@
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span>OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span class="on">DISCUSSION</span></div><div class="navicon">↻ &nbsp;≡</div></div>
   <div class="ttl"><div class="k">§9 LIMITATIONS</div><h2>연구의 한계 — 정직성 원칙</h2></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:30%;display:flex;flex-direction:column;gap:13px">
-    <div class="card" style="padding:15px 20px;border-left:3px solid var(--coral)"><div style="font-size:13.5px;font-weight:700">이미지 의존도 낮음 <span class="muted" style="font-weight:400;font-size:11px">— 최대 한계</span></div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">본 과제가 텍스트 근거 기반이라 시각 채널의 한계효용이 낮음. Hidden셋에 이미지 의존 문항이 많을 가능성에 대비해 <b>공식 제출을 실이미지(0.9628) 경로로 택함</b> — 텍스트집중 1.0은 ablation으로만 보고.</div></div>
+    <div class="card" style="padding:15px 20px;border-left:3px solid var(--coral)"><div style="font-size:13.5px;font-weight:700">시각 shortcut 억제의 양면 <span class="muted" style="font-weight:400;font-size:11px">— 최대 한계</span></div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">외형단서 차단으로 편향은 줄지만, <b>이미지가 정답에 필수인 Hidden 문항엔 취약</b>. Public 1.0→Private 0.9326 하락도 이 분포 민감성의 일부. 실이미지(0.9628) 경로를 함께 공개해 시각 채널 기여를 정직 측정.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--green)"><div style="font-size:13.5px;font-weight:700">시드 견고성 — 3-시드 재현으로 해소 <span class="muted" style="font-weight:400;font-size:11px">(RTX 6000 Ada, 2026-06-30)</span></div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">독립 3-시드 재학습(seed 42/123/2024): v6 ood2 = <b>0.708±0.0035</b>, base 0.707 → GRPO의 OOD 향상이 <b>시드 노이즈(±0.0035) 내</b>(유의차 없음). “복잡도·RL의 향상은 노이즈 수준 + 일반화 보존”을 다중시드로 정량 확인.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--sub)"><div style="font-size:13.5px;font-weight:700">보상 컴포넌트 개별 ablation 미실시</div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">Robust 전체가 HardNeg를 못 이긴 관찰만 있고, 5·6종 보상의 개별 기여 분해는 future work.</div></div>
     <div class="card" style="padding:15px 20px;border-left:3px solid var(--sub)"><div style="font-size:13.5px;font-weight:700">R1 유추의 한계</div><div class="muted" style="font-size:11.5px;line-height:1.6;margin-top:5px">distillation·대형 교사모델 부재로 R1의 distill-vs-RL 축과 직접 대응 아님 → “포화·단일토큰 과제의 유사 경향”으로 한정.</div></div>
@@ -597,9 +597,9 @@
 <!-- 29 CONCLUSION -->
 <section class="slide">
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span>OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span class="on">CLOSING</span></div><div class="navicon">↻ &nbsp;≡</div></div>
-  <div class="ttl"><div class="k">CONCLUSION</div><h2>결론 — 복잡도는 이득을 더하지 못했고, 동급이면 단순함을 택했다</h2></div>
+  <div class="ttl"><div class="k">CONCLUSION</div><h2>결론 — 핵심은 ‘정당화된 신뢰’와 검증·재현성, HardNeg-GRPO는 그 구현이다</h2></div>
   <div style="position:absolute;left:2.2%;top:30%;width:54%">
-    <div class="body" style="font-size:12.5px;line-height:1.85">추론 콜드스타트 SFT 없이 <b class="green">형식 SFT + GRPO(HardNeg-GRPO)</b>로 편향을 제거하면서 일반화를 보존했고, 이를 최종 제출로 택했다. 더 복잡한 RL 변형 4종은 모두 이를 유의하게 넘지 못했다 — 즉 <b>복잡도는 이 8B 편향 과제에서 비용 대비 이득이 없었다</b>.<br><br>본 연구의 진짜 기여는 점수가 아니라, <b>무엇이 일반화를 살리고 죽이는지</b>를 ablation으로 규명하고 거기서 <b>“동급이면 가장 단순한 모델을 택한다”</b>는 보수적 선택 원칙(Occam)을 데이터로 정당화한 것이다.</div>
+    <div class="body" style="font-size:12.5px;line-height:1.85">목표는 <b>‘근거 없으면 답하지 않는 정당화된 신뢰’</b>의 VLM이었고, <b class="green">HardNeg-GRPO(형식 SFT + GRPO)</b>는 그 철학을 구현한 방법이다 — 근거 있으면 커밋·없으면 기권, 시각 외형 shortcut을 차단해 측정 편향 신호를 낮췄다(제출=텍스트집중, Public 1.0 → Private 0.9326).<br><br>진짜 기여는 점수가 아니라 — <b>전 과정 재현·결정성·3시드 검증</b>으로 신뢰를 입증하고, 더 복잡한 RL이 8B에서 이득을 못 냄을 ablation으로 규명한 것(부수 발견: 동급이면 단순함)이다.</div>
   </div>
   <div style="position:absolute;right:2.2%;top:30%;width:39%">
     <div class="gcard" style="padding:20px 22px;text-align:center">
@@ -609,7 +609,7 @@
       <div style="border-top:1px solid var(--hair);margin:16px 0"></div>
       <div style="display:flex;justify-content:space-around">
         <div><div class="num green" style="font-size:26px">.9326</div><div class="muted" style="font-size:10px;margin-top:3px">Private 최종</div></div>
-        <div><div class="num" style="font-size:26px">.9628</div><div class="muted" style="font-size:10px;margin-top:3px">Public 실이미지</div></div>
+        <div><div class="num" style="font-size:26px">.9628</div><div class="muted" style="font-size:10px;margin-top:3px">실이미지 ablation</div></div>
         <div><div class="num green" style="font-size:26px">5/6</div><div class="muted" style="font-size:10px;margin-top:3px">결정축 best</div></div>
       </div>
     </div>
@@ -620,10 +620,10 @@
 <!-- 30 APPENDIX A: W&B TRAINING LOGS -->
 <section class="slide">
   <div class="nav"><span class="wm">pk42ac</span><div class="tabs"><span>OVERVIEW</span><span>METHOD</span><span>RESULTS</span><span class="on">APPENDIX</span></div><div class="navicon">↻ &nbsp;≡</div></div>
-  <div class="ttl"><div class="k">APPENDIX A · TRAINING LOGS (W&amp;B)</div><h2>학습 로그 실측 — v4 SFT → v6 GRPO</h2></div>
+  <div class="ttl"><div class="k">APPENDIX A · TRAINING LOGS</div><h2>학습 로그 — W&amp;B 실측값 기반 <span class="green">도식</span> (v4 SFT → v6 GRPO)</h2></div>
   <div style="position:absolute;left:2.2%;right:2.2%;top:28%;display:flex;gap:2%">
     <div class="card" style="flex:1;padding:16px 20px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">① v4 SFT — train/loss</div><div class="muted en" style="font-size:9.5px">sft-v4-unsloth-qwen3vl · Finished</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">① v4 SFT — train/loss <span class="muted" style="font-weight:400;font-size:10px">(W&amp;B 값 도식)</span></div><div class="muted en" style="font-size:9.5px">run sft-v4-unsloth-qwen3vl</div></div>
       <svg width="100%" height="180" viewBox="0 0 400 200" style="margin-top:8px">
         <line x1="34" y1="180" x2="396" y2="180" stroke="#C7D0DD" stroke-width="0.75"/>
         <text x="8" y="24" font-family="Inter" font-size="9" fill="#7B7B7B">4</text><text x="8" y="104" font-family="Inter" font-size="9" fill="#7B7B7B">2</text><text x="8" y="183" font-family="Inter" font-size="9" fill="#7B7B7B">0</text>
@@ -633,7 +633,7 @@
       <div class="muted" style="font-size:10.5px;line-height:1.5">3 epochs · ~10,000 steps · lr 2e-4 cosine · loss <b>4.3 → 0.15</b> 수렴</div>
     </div>
     <div class="card" style="flex:1;padding:16px 20px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">② v6 GRPO — reward_accuracy/mean</div><div class="muted en" style="font-size:9.5px">grpo-v6-hardneg · Finished</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">② v6 GRPO — reward_accuracy/mean <span class="muted" style="font-weight:400;font-size:10px">(W&amp;B 값 도식)</span></div><div class="muted en" style="font-size:9.5px">run grpo-v6-hardneg</div></div>
       <svg width="100%" height="180" viewBox="0 0 400 200" style="margin-top:8px">
         <line x1="34" y1="180" x2="396" y2="180" stroke="#C7D0DD" stroke-width="0.75"/>
         <text x="6" y="52" font-family="Inter" font-size="9" fill="#7B7B7B">0.8</text><text x="6" y="118" font-family="Inter" font-size="9" fill="#7B7B7B">0.4</text><text x="12" y="183" font-family="Inter" font-size="9" fill="#7B7B7B">0</text>
@@ -671,13 +671,13 @@
 <section class="slide">
   <div style="position:absolute;top:0;left:0;width:100%;height:56%;background:radial-gradient(80% 120% at 30% 20%,var(--green) 0%,var(--green-mid) 55%,var(--green-edge) 100%)"></div>
   <div class="nav"><span class="wm" style="color:#fff">pk42ac</span><div class="tabs"><span class="on" style="color:#fff;border-color:#fff">THANK YOU</span></div><div class="navicon" style="color:#fff">↻ &nbsp;≡</div></div>
-  <div style="position:absolute;top:17%;left:2.2%;color:#fff"><div class="en" style="font-size:13px;font-weight:600;letter-spacing:2px;opacity:.9">THANK YOU</div><div style="font-size:44px;font-weight:700;line-height:1.15;margin-top:10px">정교한 Robust-GRPO가,<br>단순한 HardNeg-GRPO를 못 이겼다</div></div>
-  <div style="position:absolute;top:21%;right:2.6%;text-align:right;color:#fff;font-family:'Inter';font-size:13px;font-weight:600;line-height:2">#SimplerIsBetter<br>#형식SFT+GRPO<br>#편향제거 #일반화보존<br>#Private0.9326_최종</div>
+  <div style="position:absolute;top:17%;left:2.2%;color:#fff"><div class="en" style="font-size:13px;font-weight:600;letter-spacing:2px;opacity:.9">THANK YOU</div><div style="font-size:40px;font-weight:700;line-height:1.15;margin-top:10px">근거 없으면 답하지 않는다 —<br>정당화된 신뢰의 멀티모달 VLM</div></div>
+  <div style="position:absolute;top:21%;right:2.6%;text-align:right;color:#fff;font-family:'Inter';font-size:13px;font-weight:600;line-height:2">#정당화된신뢰<br>#근거없으면기권<br>#시각shortcut억제 #편향신호감소<br>#검증·재현성 #Private0.9326</div>
   <div style="position:absolute;top:60%;left:2.2%;right:2.2%;display:flex;gap:1.6%">
     <div class="card" style="flex:1;padding:16px"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">콜드스타트가 일반화를 돕나?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px">아니다. ColdStart는 OOD 최저(0.84)에 암기 위험만 더했다.</div></div>
     <div class="card" style="flex:1;padding:16px"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">복잡한 보상이 점수를?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px">아니다. Robust-A/B는 목표 지표에서도 HardNeg를 못 이겼다(노이즈).</div></div>
     <div class="card" style="flex:1;padding:16px"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">그럼 무엇을 택하나?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px">동급이면 가장 단순한 HardNeg-GRPO — Occam의 보수적 선택.</div></div>
-    <div class="card" style="flex:1;padding:16px;border-top:3px solid var(--green)"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">최종 성적은?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px"><b class="green">Private 0.9326</b> · 실이미지 Public 0.9628. 텍스트집중 1.0은 Public 과적합.</div></div>
+    <div class="card" style="flex:1;padding:16px;border-top:3px solid var(--green)"><div class="en bold" style="font-size:26px;color:var(--green);line-height:.7">&ldquo;</div><div style="font-size:12.5px;font-weight:700;margin-top:8px">핵심 기여는?</div><div class="muted" style="font-size:11px;line-height:1.6;margin-top:6px"><b class="green">정당화된 신뢰(기권) + 시각 shortcut 억제 + 재현·검증.</b> 제출 v6 텍스트집중 Public 1.0→Private 0.9326.</div></div>
   </div>
   <div class="footer"><span>2026 SKKU MULTIMODAL AI BIAS CHALLENGE · pk42ac · 박성호</span><span>33</span></div>
 </section>
