@@ -20,3 +20,7 @@
 - `submission_v6_final.csv`(real) vs `submission_v8b.csv`(real): 8500 중 **52개만 상이(99.39% 일치)** → 두 모델 사실상 동일.
 - `submission_v6_final.csv`(real) vs `submission_v6.csv`(placeholder): 8500 중 **879개 상이(89.66% 일치)** → 실이미지가 예측을 ~10.3% 바꿈(그 변화가 점수를 깎음 = 위 ablation).
 - (위 일치율은 로컬 CSV 대조로 재현 가능 — 라벨 불요.)
+
+## 최종 Private 결과 (1차 평가 확정)
+- 텍스트집중(중립 이미지) 제출본: **Public 1.0 → Private 0.93261** — Public 과적합으로 큰 하락. "1.0"은 일반화가 아니라 Public 환상이었음(Private가 드러냄).
+- 실이미지: Public 0.9628. 멀티모달 정합성·견고성에서 실이미지 경로가 본선으로 더 적절(발표 §5.3·§9에 Public/Private 분리·하락 명시).
